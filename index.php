@@ -106,7 +106,7 @@
     <header>
         <center>
             <br>
-            <h1>ODONTO UCB</h1>
+            <img src="images/bubbles.png" style="width:200px;height:200px">
         </center>
         <br>
         <center>
