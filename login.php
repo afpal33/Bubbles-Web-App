@@ -16,7 +16,7 @@
         }
 
         body {
-            background-image: url(Images/back1.jpg);
+            background-color: aqua;
             background-position: 100%;
             font-family: sans-serif;
             margin: 0;
@@ -66,7 +66,7 @@
             <input type="text" name="username"><br><br>
             <label style="color:white">Contraseña:</label>
             <input type="password" name="password"><br><br>
-            <input type="submit" value="Login">
+            <input class="btn btn-primary btn-lg rounded-5 active" type="submit" value="Login">
         </form>
     </center>
 
@@ -75,7 +75,7 @@
 		$servername = "localhost";
 		$username = "root";
 		$password = "";
-		$dbname = "racers";
+		$dbname = "bubbles_db";
 
 		// Conexión a la base de datos
 		$conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -92,7 +92,7 @@
 			$username = $_POST["username"];
 			$password = $_POST["password"];
 			// Consultar la base de datos para verificar las credenciales del usuario
-			$sql = "SELECT * FROM usuarios WHERE usuario = '$username' AND password = '$password'";
+			$sql = "SELECT * FROM usuario_cliente WHERE Nombre = '$username' AND Contrasena= '$password'";
 			$result = mysqli_query($conn, $sql);
 
 			// Verificar si se encontró un usuario con esas credenciales
