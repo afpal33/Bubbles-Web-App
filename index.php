@@ -20,8 +20,7 @@
         }
 
         body {
-            background-image: url(Images/back1.jpg);
-            background-position: 100%;
+            background-color: #87CEEB; /* Código de color celeste */
             font-family: sans-serif;
             margin: 0;
             height: 100%;
@@ -35,27 +34,39 @@
             top: 0;
             left: 0;
             width: 100%;
+            height: 90px;
             z-index: 100;
-            
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        #logo {
+            max-width: 100%;
+            height: auto;
+            width: 150px;
+            height: 50px;
+        }
+
+        #pillNav2 {
+            height: 45px;
+            width: 900px;
+            margin: 0 auto;
         }
 
         #button {
-            position: absolute;
-            top: 32px;
-            right: 40px;
+            margin-right: 20px;
         }
+
         #welcome {
-            position: absolute;
-            top: 32px;
-            right: 25px;
             font-size: 25px;
-            color:white;
+            color: white;
         }
 
         #button2 {
-            position: absolute;
-            top: 105px;
-            right: 50px;
+            margin-left: 20px;
         }
 
         h1 {
@@ -73,6 +84,7 @@
             height: 100%;
             overflow: hidden;
         }
+
         .google-maps {
             position: relative;
             padding-bottom: 30%;
@@ -82,22 +94,27 @@
             left: 0;
             overflow: hidden;
         }
-        #title, #subtitle{
-            font-size:60px;
+
+        #title,
+        #subtitle {
+            font-size: 60px;
         }
+
         .google-maps iframe {
             position: absolute;
             width: 60% !important;
             height: 50% !important;
         }
-        #body{
+
+        #body {
             background-color: rgba(0, 0, 0, 0.651);
             width: 99%;
             border: 15px;
             padding: 30px;
             margin: 10px;
-            
         }
+
+        
     </style>
 </head>
 
@@ -106,7 +123,7 @@
     <header>
         <center>
             <br>
-            <img src="images/bubbles.png" style="width:200px;height:200px">
+            <img src="images/bubbles.png" style="width:200px;height:70px">
         </center>
         <br>
         <center>
@@ -115,7 +132,7 @@
                     <a role="button" href="#home" class="nav-link rounded-5" id="inicio" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Home</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a role="button" href="#sillones" class="nav-link rounded-5" id="cat" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Sillones</a>
+                    <a role="button" href="#servicios" class="nav-link rounded-5" id="cat" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Servicios</a>
                 </li>
                     <li class="nav-item" role="presentation">
                         <a role="button" href="#pedidos" class="nav-link rounded-5" id="ubi" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Pedidos</a>
@@ -140,40 +157,51 @@
     </header>
     <section id="body">
     <div class="content">
-            <div id="home" class="tabcontent">
+    <div id="home" class="tabcontent">
     <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <h1 id="title">Bubbles</h1>
-                <h1 id="subtitle">Calidad y buen gusto. En un solo lugar.</h1>
-                <br>
-                <br>
-                <p style="color:white; font-size: 30px"> Somos una empresa dedicada a la comodidad de nuestros clientes. Los productos que ofrecemos son de muy buena calidad, y hechos con el objetivo de satisfacer a todo público. Inicie sesión o regístrece para poder disfrutar al máximo nuestros servicios.<p>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <div id="sillones" class="tabcontent">
+    <br>  <br>
+    <br>
+    <div id="imagenCarousel" class="carousel slide" data-bs-ride="carousel" style="max-width: 600px; margin: 0 auto;">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="images/home1.jpg" class="d-block w-100" alt="Imagen 1">
+            </div>
+            <div class="carousel-item">
+                <img src="images/home2.jpg" class="d-block w-100" alt="Imagen 1">
+            </div>
+            <div class="carousel-item">
+                <img src="images/home3.jpg" class="d-block w-100" alt="Imagen 1">
+            </div>
+            <div class="carousel-item">
+                <img src="images/home4.jpg" class="d-block w-100" alt="Imagen 1">
+            </div>
+            <!-- Agrega más elementos carousel-item según sea necesario -->
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#imagenCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#imagenCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+        </button>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <h1 id="title">Bubbles</h1>
+    <h1 id="subtitle">Calidad y buen gusto. En un solo lugar.</h1>
+    <br>
+    <br>
+    <p style="color:white; font-size: 30px">Somos una empresa dedicada a la comodidad de nuestros clientes. Los productos que ofrecemos son de muy buena calidad, y hechos con el objetivo de satisfacer a todo público. Inicie sesión o regístrese para poder disfrutar al máximo nuestros servicios.</p>
+    <br>
+    <br>
+</div>
+
+                <div id="servicios" class="tabcontent">
 
                 <br>
                 <br>
@@ -184,8 +212,8 @@
                 <br>
                 <br>
             </div>
-            <div id="sillones" class="tabcontent">
-                <h1 style="font-size:60px">Sillones</h1>
+            <div id="servicios" class="tabcontent">
+                <h1 style="font-size:60px">Servicios y ofertas</h1>
                 <br>
                 <ul style="color:white">
                 <div style="display:flex; justify-content:center;">
@@ -288,7 +316,7 @@
                 <br>
 		    </div>
             
-                <h1 style="font-size:60px">Contacto</h1>
+                <h1 style="font-size:60px">No dude en contactarnos para cualquier consulta o pedido!</h1>
                 <div id="ubicacion">
                     <br>
                     <br>
