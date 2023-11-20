@@ -7,153 +7,179 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <title>BUBBLES</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Overpass&display=swap">
     <style>
-        html {
-            position: relative;
-            min-height: 100%;
-            color: white;
-        }
-
         body {
-            background-color: aqua;
-            background-position: 100%;
-            font-family: sans-serif;
+            font-family: 'Overpass', sans-serif;
+            font-size: 100%;
+            color: #1b262c;
             margin: 0;
-            height: 100%;
-            min-height: 100%;
+            background-image: url(Images/loginfondo.jpg);
+            background-position: center;
+            background-size: cover; /* Evita que la imagen de fondo se repita y cubre todo el fondo */
+            height: 100vh;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        h1 {
-            color: white;
-        }
-
-        footer {
-            font-family: "Raleway", sans-serif;
-            background-color: rgb(0, 9, 24);
-            color: rgb(146, 146, 146);
-            position: static;
-            left: 0;
-            bottom: 0;
+        #contenedor {
+            display: flex;
+            max-width: 900px; /* Ajusta según sea necesario */
             width: 100%;
-            height: 100%;
+            box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.15);
+            border-radius: 5px;
             overflow: hidden;
         }
 
+        #logo-columna {
+            background-color: #0f4c75;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #logo {
+            max-width: 100%;
+            height: auto;
+        }
+
         #body {
-            background-color: rgba(0, 0, 0, 0.651);
-            width: 99%;
-            border: 15px;
+            background-color: rgba(0, 0, 0, 0.75); /* Fondo más oscuro */
+            flex: 1; /* El contenido se expandirá para llenar el espacio restante */
             padding: 30px;
-            margin: 10px;
+            color: #bbe1fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            text-align: center;
+            color: #bbe1fa;
+        }
+
+        form {
+            margin-top: 20px;
+            width: 100%; /* Ocupa el 100% del ancho del contenedor */
+            max-width: 400px; /* Ancho máximo del formulario */
+        }
+
+        label {
+            color: #bbe1fa;
+        }
+
+        input {
+            font-family: 'Overpass', sans-serif;
+            font-size: 110%;
+            color: #1b262c;
+            display: block;
+            width: 100%;
+            height: 40px;
+            margin-bottom: 10px;
+            padding: 5px 5px 5px 10px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 3px;
+            background-color: #fff;
+        }
+
+        input::placeholder {
+            color: #E4E4E4;
+        }
+
+        input[type="submit"] {
+            background-color: #bbe1fa;
+            color: #1b262c;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0f4c75;
+        }
+
+        .pie-form {
+            font-size: 90%;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .pie-form a {
+            display: block;
+            text-decoration: none;
+            color: #bbe1fa;
+            margin-bottom: 3px;
+        }
+
+        .pie-form a:hover {
+            color: #0f4c75;
         }
     </style>
 </head>
 
 <body>
-    <div id="body">
-        <center>
-            <br>
-            <br>
-            <h1>Login</h1>
+    <div id="contenedor">
+        <div id="logo-columna" display=>
+            <img id="logo" src="Images/bubbles.png" alt="Logo de la empresa" >
+        </div>
+        <div id="body">
+            <h1>INICIO DE SESIÓN</h1>
             <form action="login.php" method="POST">
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <label style="color:white">Usuario:</label>
-                <input type="text" name="username"><br><br>
-                <label style="color:white">Contraseña:</label>
-                <input type="password" name="password"><br><br>
-                <input class="btn btn-primary btn-lg rounded-5 active" type="submit" value="Login">
+                <label>Usuario:</label>
+                <input type="text" name="username" placeholder="Usuario" required><br><br>
+                <label>Contraseña:</label>
+                <input type="password" name="password" placeholder="Contraseña" required><br><br>
+                <input type="submit" value="INGRESAR">
             </form>
-        </center>
+            <?php
+		// Configuración de la base de datos
+		$servername = "localhost";
+		$username = "root";
+		$password = "marco1211";
+		$dbname = "usuarios";
 
-        <?php
-// Configuración de la base de datos
-$host = "localhost";
-$dbname = "bubbles_db";
-$username = "root";
-$password = "";
+		// Conexión a la base de datos
+		$conn = mysqli_connect($servername, $username, $password, $dbname);
 
-// Intentamos establecer la conexión a la base de datos
-$conn = mysqli_connect($host, $username, $password, $dbname);
+		// Verificar la conexión
+		if (!$conn) {
+			die("Connection failed: " . mysqli_connect_error());
+		}
 
-// Verificar la conexión
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+		// Verificar si el formulario ha sido enviado
+		if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-// Definimos las variables y las inicializamos con valores vacíos
-$username = $password = "";
-$username_err = $password_err = "";
+			// Obtener los valores del formulario
+			$username = $_POST["username"];
+			$password = $_POST["password"];
+			// Consultar la base de datos para verificar las credenciales del usuario
+			$sql = "SELECT * FROM usuarios WHERE username = '$username' AND password = '$password'";
+			$result = mysqli_query($conn, $sql);
 
-// Procesamos los datos del formulario cuando se envía el formulario
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validar el nombre de usuario
-    if (empty(trim($_POST["username"]))) {
-        $username_err = "Por favor, ingresa un nombre de usuario.";
-    } else {
-        $username = trim($_POST["username"]);
-    }
+			// Verificar si se encontró un usuario con esas credenciales
+			if (mysqli_num_rows($result) == 1) {
+				// Iniciar sesión
+				session_start();
+				$_SESSION["username"] = $username;
 
-    // Validar la contraseña
-    if (empty(trim($_POST["password"]))) {
-        $password_err = "Por favor, ingresa una contraseña.";
-    } else {
-        $password = trim($_POST["password"]);
-    }
+				// Redirigir al usuario a la página de inicio
+				header("Location: index.php");
+				exit();
+			} else {    
+				// Mostrar un mensaje de error si no se encontró un usuario con esas credenciales
+				echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
+			}
+		}
 
-    // Verificar si no hay errores antes de realizar la consulta a la base de datos
-    if (empty($username_err) && empty($password_err)) {
-        // Consulta a la base de datos para obtener el hash de la contraseña
-        $sql = "SELECT ID_usuario, Nombre, Contrasena FROM usuario_cliente WHERE Nombre = ?";
-        if ($stmt = mysqli_prepare($conn, $sql)) {
-            // Asignamos los parámetros
-            mysqli_stmt_bind_param($stmt, "s", $param_username);
-            // Asignamos los valores
-            $param_username = $username;
-            // Intentamos ejecutar la consulta
-            if (mysqli_stmt_execute($stmt)) {
-                $result = mysqli_stmt_get_result($stmt);
-                // Verificar si se encontró un usuario con ese nombre
-                if (mysqli_num_rows($result) == 1) {
-                    // Obtener la contraseña almacenada en la base de datos
-                    $row = mysqli_fetch_assoc($result);
-                    $hash = $row["Contrasena"];
-
-                    // Verificar la contraseña usando password_verify
-                    if (password_verify($password, $hash)) {
-                        // Iniciar sesión
-                        session_start();
-                        $_SESSION["username"] = $username;
-                        // Redirigir al usuario a la página de inicio
-                        header("Location: index.php");
-                        exit();
-                    } else {
-                        // Mostrar un mensaje de error si la contraseña no coincide
-                        echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
-                    }
-                } else {
-                    // Mostrar un mensaje de error si no se encontró un usuario con ese nombre
-                    echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
-                }
-            } else {
-                echo "Oops! Algo salió mal. Por favor, intenta de nuevo más tarde.";
-            }
-            // Cerramos la sentencia
-            mysqli_stmt_close($stmt);
-        }
-    }
-    // Cerramos la conexión a la base de datos
-    mysqli_close($conn);
-}
-?>
-
-
+		// Cerrar la conexión a la base de datos
+		mysqli_close($conn);
+	?>
+            <div class="pie-form">
+                <a href="#">¿Perdiste tu contraseña?</a>
+                <a href="#">¿No tienes Cuenta? Regístrate</a>
+            </div>
+        </div>
     </div>
-
 </body>
 
 </html>
