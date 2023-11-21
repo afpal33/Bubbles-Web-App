@@ -135,8 +135,8 @@
 		// Configuración de la base de datos
 		$servername = "localhost";
 		$username = "root";
-		$password = "marco1211";
-		$dbname = "usuarios";
+		$password = "";
+		$dbname = "bubbles_db";
 
 		// Conexión a la base de datos
 		$conn = mysqli_connect($servername, $username, $password, $dbname);
@@ -153,7 +153,7 @@
 			$username = $_POST["username"];
 			$password = $_POST["password"];
 			// Consultar la base de datos para verificar las credenciales del usuario
-			$sql = "SELECT * FROM usuarios WHERE username = '$username' AND password = '$password'";
+			$sql = "SELECT * FROM usuario_cliente WHERE Nombre = '$username' AND Contrasena = '$password'";
 			$result = mysqli_query($conn, $sql);
 
 			// Verificar si se encontró un usuario con esas credenciales
@@ -175,8 +175,7 @@
 		mysqli_close($conn);
 	?>
             <div class="pie-form">
-                <a href="#">¿Perdiste tu contraseña?</a>
-                <a href="#">¿No tienes Cuenta? Regístrate</a>
+                <a href="register.php">¿No tienes Cuenta? Regístrate</a>
             </div>
         </div>
     </div>

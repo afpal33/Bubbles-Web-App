@@ -5,7 +5,7 @@
 		{
 			return 0;
 		}
-		if (!mysqli_select_db($link,"racers"))
+		if (!mysqli_select_db($link,"bubbles_db"))
 		{
 			return 0;
 		}
