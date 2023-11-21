@@ -449,11 +449,11 @@ footer {
                 <p>
                     <br>
                     <br>
-                    Fabrizio Palenque
+                    Bubbles La Paz
                     <br>
                     2023
                     <br>
-                    andy.palenque@ucb.edu.bo
+                    Por Fabrizio Palenque, Diego Moron, Christian Cevallos, Sebastián Pinto, Marco Quispe
                     <br>
                     <br>
                 </p>
