@@ -140,65 +140,72 @@
                 <input type="submit" value="INGRESAR">
             </form>
             <?php
-            // Configuración de la base de datos
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "bubbles_db";
+// Configuración de la base de datos
+$servername = "localhost";
+$username = "root";
+$dbpassword = "";
+$dbname = "bubbles_db";
 
-            // Conexión a la base de datos
-            $conn = mysqli_connect($servername, $username, $password, $dbname);
+// Conexión a la base de datos
+$conn = mysqli_connect($servername, $username, $dbpassword, $dbname);
 
-            // Verificar la conexión
-            if (!$conn) {
-                die("Connection failed: " . mysqli_connect_error());
+// Verificar la conexión
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+// Verificar si el formulario ha sido enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener los valores del formulario
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    // Definir la tabla a consultar
+    $table_name = "usuario_cliente";
+
+    // Verificar el tipo de cuenta seleccionado (usuario o administrador)
+    $account_type = "cliente";
+
+    // Redirigir al panel de administrador si se selecciona "administrador"
+    if ($_POST["account_type"] == "admin") {
+        $table_name = "usuario_administrativo";
+        $account_type = "admin";
+    }
+
+    // Consultar la base de datos para verificar las credenciales del usuario
+    $sql = "SELECT * FROM $table_name WHERE Nombre = '$username'";
+    $result = mysqli_query($conn, $sql);
+
+    // Verificar si se encontró un usuario con esas credenciales
+    if ($result && mysqli_num_rows($result) == 1) {
+        $row = mysqli_fetch_assoc($result);
+
+        // Verificar la contraseña utilizando password_verify
+        if (password_verify($password, $row['Contraseña'])) {
+            // Iniciar sesión
+            session_start();
+            $_SESSION["username"] = $username;
+
+            // Redirigir al usuario según el tipo de cuenta
+            if ($account_type == 'admin') {
+                header("Location: admin.php"); // Redireccionar al panel de administrador
+            } else {
+                header("Location: index.php"); // Redireccionar a la página de inicio
             }
+            exit();
+        } else {
+            // Mostrar un mensaje de error si la contraseña es incorrecta
+            echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
+        }
+    } else {
+        // Mostrar un mensaje de error si no se encontró un usuario con ese nombre
+        echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
+    }
+}
 
-            // Verificar si el formulario ha sido enviado
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-                // Obtener los valores del formulario
-                $username = $_POST["username"];
-                $password = $_POST["password"];
-
-                // Definir la tabla a consultar
-                $table_name = "usuario_cliente";
-
-                // Verificar el tipo de cuenta seleccionado (usuario o administrador)
-                $account_type = "cliente";
-
-                // Redirigir al panel de administrador si se selecciona "administrador"
-                if ($_POST["account_type"] == "administrador") {
-                    $table_name = "usuario_administrativo";
-                    $account_type = "admin";
-                }
-
-                // Consultar la base de datos para verificar las credenciales del usuario
-                $sql = "SELECT * FROM $table_name WHERE Nombre = '$username' AND Contraseña = '$password'";
-                $result = mysqli_query($conn, $sql);
-
-                // Verificar si se encontró un usuario con esas credenciales
-                if (mysqli_num_rows($result) == 1) {
-                    // Iniciar sesión
-                    session_start();
-                    $_SESSION["username"] = $username;
-
-                    // Redirigir al usuario según el tipo de cuenta
-                    if ($account_type == 'admin') {
-                        header("Location: admin.php"); // Redireccionar al panel de administrador
-                    } else {
-                        header("Location: index.php"); // Redireccionar a la página de inicio
-                    }
-                    exit();
-                } else {
-                    // Mostrar un mensaje de error si no se encontró un usuario con esas credenciales
-                    echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
-                }
-            }
-
-            // Cerrar la conexión a la base de datos
-            mysqli_close($conn);
-            ?>
+// Cerrar la conexión a la base de datos
+mysqli_close($conn);
+?>
             <div class="pie-form">
                 <a href="#">¿Perdiste tu contraseña?</a>
                 <a href="register.php">¿No tienes Cuenta? Regístrate</a>
