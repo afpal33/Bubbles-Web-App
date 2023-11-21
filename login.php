@@ -180,8 +180,12 @@
                             session_start();
                             $_SESSION["username"] = $username;
 
-                            // Redirigir al usuario a la página de inicio
-                            header("Location: index.php");
+                            // Redirigir al usuario
+                            if ($account_type == 'admin') {
+                                header("Location: admin.php"); // Redireccionar al panel de administrador
+                            } else {
+                                header("Location: index.php"); // Redireccionar a la página de inicio
+                            }
                             exit();
                         } else {
                             // Mostrar un mensaje de error si la contraseña no coincide
