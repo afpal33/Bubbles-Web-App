@@ -164,9 +164,22 @@
                     // Redirigir al usuario a la página de inicio
                     header("Location: index.php");
                     exit();
-                } else {    
-                    // Mostrar un mensaje de error si no se encontró un usuario con esas credenciales
-                    echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
+                } else {
+                    $sql = "SELECT * FROM usuario_administrativo WHERE Nombre = '$username' AND Contraseña = '$password'";
+                    $result = mysqli_query($conn, $sql);
+    
+                    // Verificar si se encontró un usuario con esas credenciales
+                    if (mysqli_num_rows($result) == 1) {
+                        // Iniciar sesión
+                        session_start();
+                        $_SESSION["username"] = $username;
+    
+                        // Redirigir al usuario a la página de inicio
+                        header("Location: admin.php");
+                        exit();
+                    }
+                        else{// Mostrar un mensaje de error si no se encontró un usuario con esas credenciales
+                            echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";}
                 }
             }
 
@@ -175,7 +188,7 @@
         ?>
             <div class="pie-form">
                 <a href="#">¿Perdiste tu contraseña?</a>
-                <a href="Reg">¿No tienes Cuenta? Regístrate</a>
+                <a href="register.php">¿No tienes Cuenta? Regístrate</a>
             </div>
         </div>
     </div>
