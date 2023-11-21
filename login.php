@@ -119,8 +119,8 @@
 
 <body>
     <div id="contenedor">
-        <div id="logo-columna" display=>
-            <img id="logo" src="Images/bubbles.png" alt="Logo de la empresa" >
+        <div id="logo-columna">
+            <img id="logo" src="Images/bubbles.png" alt="Logo de la empresa">
         </div>
         <div id="body">
             <h1>INICIO DE SESIÓN</h1>
@@ -129,52 +129,75 @@
                 <input type="text" name="username" placeholder="Usuario" required><br><br>
                 <label>Contraseña:</label>
                 <input type="password" name="password" placeholder="Contraseña" required><br><br>
+
+                <!-- Nuevo combobox para seleccionar el tipo de cuenta -->
+                <label>Tipo de cuenta:</label>
+                <select name="account_type">
+                    <option value="user">Usuario</option>
+                    <option value="admin">Administrador</option>
+                </select><br><br>
+
                 <input type="submit" value="INGRESAR">
             </form>
             <?php
-		// Configuración de la base de datos
-		$servername = "localhost";
-		$username = "root";
-		$password = "";
-		$dbname = "bubbles_db";
+                // Configuración de la base de datos
+                $servername = "localhost";
+                $username = "root";
+                $password = "";
+                $dbname = "bubbles_db";
 
-		// Conexión a la base de datos
-		$conn = mysqli_connect($servername, $username, $password, $dbname);
+                // Conexión a la base de datos
+                $conn = mysqli_connect($servername, $username, $password, $dbname);
 
-		// Verificar la conexión
-		if (!$conn) {
-			die("Connection failed: " . mysqli_connect_error());
-		}
+                // Verificar la conexión
+                if (!$conn) {
+                    die("Connection failed: " . mysqli_connect_error());
+                }
 
-		// Verificar si el formulario ha sido enviado
-		if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                // Verificar si el formulario ha sido enviado
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-			// Obtener los valores del formulario
-			$username = $_POST["username"];
-			$password = $_POST["password"];
-			// Consultar la base de datos para verificar las credenciales del usuario
-			$sql = "SELECT * FROM usuario_cliente WHERE Nombre = '$username' AND Contrasena = '$password'";
-			$result = mysqli_query($conn, $sql);
+                    // Obtener los valores del formulario
+                    $username = $_POST["username"];
+                    $password = $_POST["password"];
+                    $account_type = $_POST["account_type"];
 
-			// Verificar si se encontró un usuario con esas credenciales
-			if (mysqli_num_rows($result) == 1) {
-				// Iniciar sesión
-				session_start();
-				$_SESSION["username"] = $username;
+                    // Ajustar la tabla según el tipo de cuenta seleccionado
+                    $table_name = ($account_type == 'admin') ? 'usuario_administrativo' : 'usuario_cliente';
 
-				// Redirigir al usuario a la página de inicio
-				header("Location: index.php");
-				exit();
-			} else {    
-				// Mostrar un mensaje de error si no se encontró un usuario con esas credenciales
-				echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
-			}
-		}
+                    // Consultar la base de datos para verificar las credenciales del usuario
+                    $sql = "SELECT * FROM $table_name WHERE Nombre = '$username'";
+                    $result = mysqli_query($conn, $sql);
 
-		// Cerrar la conexión a la base de datos
-		mysqli_close($conn);
-	?>
+                    // Verificar si se encontró un usuario con esas credenciales
+                    if ($result && mysqli_num_rows($result) == 1) {
+                        $row = mysqli_fetch_assoc($result);
+                        $hash = $row['Contraseña'];
+
+                        // Verificar la contraseña
+                        if (password_verify($password, $hash)) {
+                            // Iniciar sesión
+                            session_start();
+                            $_SESSION["username"] = $username;
+
+                            // Redirigir al usuario a la página de inicio
+                            header("Location: index.php");
+                            exit();
+                        } else {
+                            // Mostrar un mensaje de error si la contraseña no coincide
+                            echo "<center><p>Contraseña verificada incorrectamente.</p></center>";
+                        }
+                    } else {
+                        // Mostrar un mensaje de error si no se encontró un usuario con esas credenciales
+                        echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
+                    }
+                }
+
+                // Cerrar la conexión a la base de datos
+                mysqli_close($conn);
+            ?>
             <div class="pie-form">
+                <a href="#">¿Perdiste tu contraseña?</a>
                 <a href="register.php">¿No tienes Cuenta? Regístrate</a>
             </div>
         </div>
