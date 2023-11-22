@@ -39,6 +39,9 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         body {
             background-color: #87CEEB; /* Azul celeste */
@@ -143,7 +146,7 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
                             <td><?= $row['Nombre'] ?></td>
                             <td><?= $row['CI'] ?></td>
                             <td>
-                                <a href="editar_admin.php?id=<?= $row['ID_UA'] ?>">Editar</a>
+                                <a href="#" class="editarAdmin" data-toggle="modal" data-target="#editarAdminModal" data-id="<?= $row['ID_UA'] ?>" data-nombre="<?= $row['Nombre'] ?>" data-ci="<?= $row['CI'] ?>">Editar</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -172,26 +175,54 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
             <button type="submit" name="agregar_admin" class="btn btn-primary">Agregar Administrativo</button>
         </form>
     </div>
+
+    <!-- Modal para editar usuario_administrativo -->
+    <div class="modal fade" id="editarAdminModal" tabindex="-1" role="dialog" aria-labelledby="editarAdminModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarAdminModalLabel">Editar Administrativo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="editarAdminForm" method="POST" action="admin.php">
+                        <div class="form-group">
+                            <label for="nombre_admin_editar">Nombre:</label>
+                            <input type="text" id="nombre_admin_editar" name="nombre_admin_editar" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contrasena_admin_editar">Contraseña:</label>
+                            <input type="password" id="contrasena_admin_editar" name="contrasena_admin_editar" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ci_admin_editar">CI:</label>
+                            <input type="text" id="ci_admin_editar" name="ci_admin_editar" required>
+                        </div>
+
+                        <input type="hidden" id="id_admin_editar" name="id_admin_editar">
+
+                        <button type="submit" name="editar_admin" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configurar el modal de edición con los datos del usuario_administrativo seleccionado
+        $('.editarAdmin').on('click', function () {
+            var id_admin = $(this).data('id');
+            var nombre_admin = $(this).data('nombre');
+            var ci_admin = $(this).data('ci');
+
+            $('#id_admin_editar').val(id_admin);
+            $('#nombre_admin_editar').val(nombre_admin);
+            $('#ci_admin_editar').val(ci_admin);
+        });
+    </script>
 </body>
 </html>
-
-<?php
-// Procesar formulario para agregar nuevo usuario_administrativo
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_admin'])) {
-    $nombre_admin = mysqli_real_escape_string($link, $_POST['nombre_admin']);
-    $contrasena_admin = mysqli_real_escape_string($link, $_POST['contrasena_admin']);
-    $ci_admin = mysqli_real_escape_string($link, $_POST['ci_admin']);
-
-    // Insertar en la base de datos
-    $query = "INSERT INTO Usuario_administrativo (Nombre, Contraseña, CI) VALUES ('$nombre_admin', '$contrasena_admin', '$ci_admin')";
-
-    if (mysqli_query($link, $query)) {
-        echo "<script>alert('Usuario administrativo agregado con éxito.');</script>";
-        echo "<script>window.location.replace('admin.php');</script>";
-    } else {
-        echo "<script>alert('Error al agregar usuario administrativo: " . mysqli_error($link) . "');</script>";
-    }
-}
-
-mysqli_close($link);
-?>
