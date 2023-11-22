@@ -319,7 +319,7 @@ footer {
     <p style="color: black; font-size: 20px;">
         Puedes canjear tus puntos de cliente regular para obtener ofertas especiales y más.
     </p>
-    <a href="pagina_ofertas.html" style="display: inline-block; padding: 10px 20px; background-color: #1E90FF; color: white; text-decoration: none; font-size: 18px; border-radius: 5px;">Ir a ofertas</a>
+    <a href="ofertas.php" style="display: inline-block; padding: 10px 20px; background-color: #1E90FF; color: white; text-decoration: none; font-size: 18px; border-radius: 5px;">Ir a ofertas</a>
 </div>
                 </ul>
                 <div id="pedidos" class="tabcontent">
