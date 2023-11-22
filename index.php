@@ -155,7 +155,7 @@ footer {
             <?php endif; ?>
         <?php else: ?>
         <a id="button" href="login.php" class="btn btn-primary btn-lg rounded-5 active" role="button" style="background-color: rgb(0, 107, 247);">Iniciar Sesión</a>
-        <a id="button2" href="abm.php" class="btn btn-primary btn-lg rounded-5 active" role="button" style="background-color: rgb(0, 107, 247);">Registrarse</a>
+        <a id="button2" href="register.php" class="btn btn-primary btn-lg rounded-5 active" role="button" style="background-color: rgb(0, 107, 247);">Registrarse</a>
         <?php endif; ?>
         <br>
         <br>
