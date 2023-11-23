@@ -134,32 +134,33 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
         </div>
 
         <!-- Tabla de usuario_administrativo -->
-        <h2>Usuarios Administrativos</h2>
-        <div class="table-container">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>CI</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($row = mysqli_fetch_array($result_admin)) : ?>
+            <h2>Usuarios Administrativos</h2>
+            <div class="table-container">
+                <table class="table table-bordered">
+                    <thead>
                         <tr>
-                            <td><?= $row['ID_UA'] ?></td>
-                            <td><?= $row['Nombre'] ?></td>
-                            <td><?= $row['CI'] ?></td>
-                            <td>
-                                <a href="#" class="editarAdmin" data-toggle="modal" data-target="#editarAdminModal" data-id="<?= $row['ID_UA'] ?>" data-nombre="<?= $row['Nombre'] ?>" data-ci="<?= $row['CI'] ?>">Editar</a>
-                                <a href="#" class="eliminarAdmin" data-toggle="modal" data-target="#eliminarAdminModal" data-id="<?= $row['ID_UA'] ?>">Eliminar</a>
-                            </td>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>CI</th>
+                            <th>Acciones</th>
                         </tr>
-                    <?php endwhile; ?>
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = mysqli_fetch_array($result_admin)) : ?>
+                            <tr>
+                                <td><?= $row['ID_UA'] ?></td>
+                                <td><?= $row['Nombre'] ?></td>
+                                <td><?= $row['CI'] ?></td>
+                                <td>
+                                    <button type="button" class="btn btn-primary editarAdmin" data-toggle="modal" data-target="#editarAdminModal" data-id="<?= $row['ID_UA'] ?>" data-nombre="<?= $row['Nombre'] ?>" data-ci="<?= $row['CI'] ?>">Editar</button>
+                                    <button type="button" class="btn btn-danger eliminarAdmin" data-toggle="modal" data-target="#eliminarAdminModal" data-id="<?= $row['ID_UA'] ?>">Eliminar</button>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+
 
         <!-- Formulario para agregar nuevo usuario_administrativo -->
         <button type="button" class="btn btn-info d-flex flex-row-reverse me-5" data-toggle="modal" data-target="#agregarAdminModal">Agregar Administrativo</button>
@@ -296,36 +297,33 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
         </div>
     </div>
 </div>
-<!-- Modal para confirmar eliminación de usuario_administrativo -->
+<!-- Modal para eliminar usuario_administrativo -->
 <div class="modal fade" id="eliminarAdminModal" tabindex="-1" role="dialog" aria-labelledby="eliminarAdminModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form id="eliminarAdminForm" method="POST" action="admin.php">
-                <input type="hidden" name="accion_admin" id="accion_admin" value="eliminar">
-                <input type="hidden" id="id_admin_eliminar" name="id_admin_eliminar">
-
-                <div class="modal-header">
-                    <h5 class="modal-title" id="eliminarAdminModalLabel">Eliminar Administrador</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Para confirmar la eliminación, ingrese la contraseña del usuario administrativo:</p>
-                    <div class="form-group">
-                        <label for="contrasena_admin_eliminar">Contraseña:</label>
-                        <input type="password" id="contrasena_admin_eliminar" name="contrasena_admin_eliminar" required>
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form id="eliminarAdminForm" method="POST" action="admin.php">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="eliminarAdminModalLabel">Eliminar Administrador</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" name="eliminar_admin" class="btn btn-danger">Eliminar Administrativo</button>
-                </div>
-            </form>
+                    <div class="modal-body">
+                        <div class="form-group">
+                        <p>Para confirmar la eliminación, ingrese la contraseña del usuario administrativo:</p>
+                            <label for="contrasena_admin_eliminar">Contraseña:</label>
+                            <input type="password" id="contrasena_admin_eliminar" name="contrasena_admin_eliminar" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="id_admin_eliminar" name="id_admin_eliminar">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" name="eliminar_admin" class="btn btn-danger">Eliminar Administrativo</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
 <!-- Código adicional para mostrar productos de la tabla Promo -->
 <!-- Añadir aquí el código que se encargará de las promociones -->
 
@@ -340,7 +338,19 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
         $('#nombre_admin_editar').val(nombre_admin);
         $('#ci_admin_editar').val(ci_admin);
     });
+
+    // Configurar el modal de eliminación con los datos del usuario_administrativo seleccionado
+    $('.eliminarAdmin').on('click', function () {
+            var id_admin = $(this).data('id');
+            var nombre_admin = $(this).data('nombre');
+
+            $('#id_admin_eliminar').val(id_admin);
+            // Puedes agregar el nombre a algún elemento del modal si lo necesitas
+            // $('#nombre_admin_eliminar').text(nombre_admin);
+        });
+
 </script>
+
 
 <?php
 // ... (código anterior)
@@ -378,28 +388,37 @@ if (isset($_POST['editar_admin'])) {
     }
 }
 
+
 // Procesar el formulario para eliminar un usuario administrativo
 if (isset($_POST['eliminar_admin'])) {
     $id_admin_eliminar = $_POST['id_admin_eliminar'];
     $contrasena_admin_eliminar = $_POST['contrasena_admin_eliminar'];
 
-    // Verificar la contraseña antes de eliminar
-    $query_verificar_contrasena = "SELECT ID_UA FROM Usuario_administrativo WHERE ID_UA='$id_admin_eliminar' AND Contraseña='$contrasena_admin_eliminar'";
-    $result_verificar_contrasena = mysqli_query($link, $query_verificar_contrasena);
+    // Consulta preparada para mejorar la seguridad
+    $query_verificar_contrasena = "SELECT Contraseña FROM Usuario_administrativo WHERE ID_UA=? AND Contraseña=?";
+    $stmt = mysqli_prepare($link, $query_verificar_contrasena);
+    mysqli_stmt_bind_param($stmt, "ss", $id_admin_eliminar, $contrasena_admin_eliminar);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_store_result($stmt);
 
-    if (mysqli_num_rows($result_verificar_contrasena) > 0) {
+    if (mysqli_stmt_num_rows($stmt) > 0) {
         // Contraseña correcta, proceder con la eliminación
         $query_eliminar_admin = "DELETE FROM Usuario_administrativo WHERE ID_UA='$id_admin_eliminar'";
 
         if (mysqli_query($link, $query_eliminar_admin)) {
-            echo '<script>alert("Usuario administrativo eliminado correctamente."); window.location.href="admin.php";</script>';
+            echo '<script>window.location.href="admin.php";</script>';
         } else {
             echo "Error al eliminar usuario administrativo: " . mysqli_error($link);
         }
     } else {
-        echo '<script>alert("Contraseña incorrecta. No se pudo eliminar el usuario administrativo."); window.location.href="admin.php";</script>';
+        echo "Contraseña incorrecta. No se pudo eliminar el usuario administrativo.";
     }
+
+    mysqli_stmt_close($stmt);
 }
+
+
+
 ?>
 
 </body>
