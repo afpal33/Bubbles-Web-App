@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-// Función para conectar a la base de datos
+$con = conectarBaseDatos();
+
 function conectarBaseDatos()
 {
     $servername = "localhost";
@@ -34,6 +35,7 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -42,6 +44,8 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
     <style>
         body {
             background-color: #87CEEB; /* Azul celeste */
@@ -94,6 +98,7 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
     </style>
     <title>Administrador</title>
 </head>
+
 <body>
     <header>
         <center>
@@ -101,6 +106,7 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
             <img src="Images/bubbles.png" style="width:200px;height:70px">
         </center>
     </header>
+
     <div class="container">
         <h1>Gestión de Usuarios</h1>
 
@@ -155,22 +161,47 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
         </div>
 
         <!-- Formulario para agregar nuevo usuario_administrativo -->
-        <h2>Agregar Usuario Administrativo</h2>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agregarAdminModal">Agregar Administrativo</button>
+        <button type="button" class="btn btn-info d-flex flex-row-reverse me-5" data-toggle="modal" data-target="#agregarAdminModal">Agregar Administrativo</button>
+        <h2>Promociones</h2>
+        <button type="button" class="btn btn-info d-flex flex-row-reverse me-5" data-toggle="modal" data-target="#agregarPromoModal">
+    Insertar
+</button>
+
+        <div class="container mt-5">
+            <div class="row">
+                <?php
+                $promoQuery = mysqli_query($con, "SELECT * FROM Promo");
+
+                while ($promoRow = mysqli_fetch_assoc($promoQuery)) {
+                    echo
+                    "<div class='col-lg-4 col-md-6 col-sm-12 mt-4 mt-sm-0'>
+                            <div class='card mt-3' style='width: 18rem;'>
+                                <img class='ms-5 mt-3' src='data:image;base64," . base64_encode($promoRow["imagen"]) . "' style='height:200px;width:200px;'>
+                                <div class='card-body'>
+                                    <h5 class='card-title'>" . $promoRow["descripcion"] . "</h5>
+                                    <p class='card-text'><b>Costo en Puntos: </b>" . $promoRow["costo_puntos"] . "</p>
+                                </div>
+                                <a href='#' class='btn btn-danger'>Eliminar</a>
+                            </div>
+                        </div>";
+                }
+                ?>
+            </div>
+        </div>
     </div>
 
     <!-- Modal para agregar usuario_administrativo -->
     <div class="modal fade" id="agregarAdminModal" tabindex="-1" role="dialog" aria-labelledby="agregarAdminModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="agregarAdminModalLabel">Agregar Administrativo</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="agregarAdminForm" method="POST" action="admin.php">
+                <form id="agregarAdminForm" method="POST" action="admin.php">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="agregarAdminModalLabel">Agregar Administrador</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
                             <label for="nombre_admin_agregar">Nombre:</label>
                             <input type="text" id="nombre_admin_agregar" name="nombre_admin_agregar" required>
@@ -185,10 +216,12 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
                             <label for="ci_admin_agregar">CI:</label>
                             <input type="text" id="ci_admin_agregar" name="ci_admin_agregar" required>
                         </div>
-
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="submit" name="agregar_admin" class="btn btn-primary">Agregar Administrativo</button>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -197,14 +230,14 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
     <div class="modal fade" id="editarAdminModal" tabindex="-1" role="dialog" aria-labelledby="editarAdminModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editarAdminModalLabel">Editar Administrativo</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="editarAdminForm" method="POST" action="admin.php">
+                <form id="editarAdminForm" method="POST" action="admin.php">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarAdminModalLabel">Editar Administrador</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
                         <div class="form-group">
                             <label for="nombre_admin_editar">Nombre:</label>
                             <input type="text" id="nombre_admin_editar" name="nombre_admin_editar" required>
@@ -220,54 +253,44 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
                             <input type="text" id="ci_admin_editar" name="ci_admin_editar" required>
                         </div>
 
-                        <input type="hidden" id="id_admin_editar" name="id_admin_editar">
-
+                        <!-- Añade cualquier otro campo que necesites editar -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                         <button type="submit" name="editar_admin" class="btn btn-primary">Guardar Cambios</button>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
-        <?php
-        
-        // ... (código anterior)
-        
-        // Procesar el formulario para agregar un nuevo usuario administrativo
-        if (isset($_POST['agregar_admin'])) {
-            $nombre_admin_agregar = $_POST['nombre_admin_agregar'];
-            $contrasena_admin_agregar = password_hash($_POST['contrasena_admin_agregar'], PASSWORD_DEFAULT);
-            $ci_admin_agregar = $_POST['ci_admin_agregar'];
-        
-            $query_agregar_admin = "INSERT INTO Usuario_administrativo (Nombre, Contraseña, CI) VALUES ('$nombre_admin_agregar', '$contrasena_admin_agregar', '$ci_admin_agregar')";
-        
-            if (mysqli_query($link, $query_agregar_admin)) {
-                echo '<script>alert("Usuario administrativo agregado con éxito.");</script>';
-                echo '<script>window.location.href="admin.php";</script>';
-            } else {
-                echo "Error al agregar usuario administrativo: " . mysqli_error($link);
-            }
-        }
-        
-        // Procesar el formulario para editar un usuario administrativo
-        if (isset($_POST['editar_admin'])) {
-            $id_admin_editar = $_POST['id_admin_editar'];
-            $nombre_admin_editar = $_POST['nombre_admin_editar'];
-            $contrasena_admin_editar = password_hash($_POST['contrasena_admin_editar'], PASSWORD_DEFAULT);
-            $ci_admin_editar = $_POST['ci_admin_editar'];
-        
-            $query_editar_admin = "UPDATE Usuario_administrativo SET Nombre='$nombre_admin_editar', Contraseña='$contrasena_admin_editar', CI='$ci_admin_editar' WHERE ID_UA='$id_admin_editar'";
-        
-            if (mysqli_query($link, $query_editar_admin)) {
-                echo '<script>alert("Usuario administrativo editado con éxito.");</script>';
-                echo '<script>window.location.href="admin.php";</script>';
-            } else {
-                echo "Error al editar usuario administrativo: " . mysqli_error($link);
-            }
-        }
-        
-        // ... (código posterior)
-        ?>
-        
     </div>
+
+    <!-- Modal para agregar promoción -->
+    <div class="modal fade" id="agregarPromoModal" tabindex="-1" role="dialog" aria-labelledby="agregarPromoModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form action="insertar.php" method="POST" enctype='multipart/form-data'>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="agregarPromoModalLabel">Agregar Promoción</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <input type='file' class="form-control mb-3" name='file' required>
+                        <input type="text" class="form-control mb-3" name="descripcion" placeholder="Descripción" required>
+                        <input type="text" class="form-control mb-3" name="costo_puntos" placeholder="Costo en Puntos" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" value="Upload" class="btn btn-warning">Guardar Datos</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Código adicional para mostrar productos de la tabla Promo -->
+    <!-- Añadir aquí el código que se encargará de las promociones -->
 
     <script>
         // Configurar el modal de edición con los datos del usuario_administrativo seleccionado
@@ -282,6 +305,6 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
         });
     </script>
 
-    
 </body>
+
 </html>
