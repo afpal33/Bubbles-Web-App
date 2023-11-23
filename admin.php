@@ -153,6 +153,7 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
                             <td><?= $row['CI'] ?></td>
                             <td>
                                 <a href="#" class="editarAdmin" data-toggle="modal" data-target="#editarAdminModal" data-id="<?= $row['ID_UA'] ?>" data-nombre="<?= $row['Nombre'] ?>" data-ci="<?= $row['CI'] ?>">Editar</a>
+                                <a href="#" class="eliminarAdmin" data-toggle="modal" data-target="#eliminarAdminModal" data-id="<?= $row['ID_UA'] ?>">Eliminar</a>
                             </td>
                         </tr>
                     <?php endwhile; ?>
@@ -164,160 +165,242 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
         <button type="button" class="btn btn-info d-flex flex-row-reverse me-5" data-toggle="modal" data-target="#agregarAdminModal">Agregar Administrativo</button>
         <h2>Promociones</h2>
         <button type="button" class="btn btn-info d-flex flex-row-reverse me-5" data-toggle="modal" data-target="#agregarPromoModal">
-    Insertar
-</button>
+            Insertar
+        </button>
 
         <div class="container mt-5">
             <div class="row">
-                
-                
                 <?php
                 $query = mysqli_query($con, "SELECT * FROM Promo");
-            while ($row = mysqli_fetch_assoc($query)) {
-                echo
-                "<div class='col-lg-4 col-md-6 col-sm-12 mt-4 mt-sm-0'>
-                        <div class='card  mt-3' style='width: 18rem;'>
-                            <img class='ms-5 mt-3' src='data:image;base64," . base64_encode($row["imagen"]) . "' style='height:200px;width:200px;'>
-                            <div class='card-body'>
-                                <h5 class='card-title'>" . $row["descripcion"] . "</h5>
-                                <p class='card-text'><b>Costo Puntos: </b>" . $row["costo_puntos"] . "</p>
-                            " ?>
-                <a href="delete.php?id=<?php echo $row["Id_Promo"] ?>" class="btn btn-danger">Eliminar</a>
+                while ($row = mysqli_fetch_assoc($query)) {
+                    echo
+                    "<div class='col-lg-4 col-md-6 col-sm-12 mt-4 mt-sm-0'>
+                            <div class='card  mt-3' style='width: 18rem;'>
+                                <img class='ms-5 mt-3' src='data:image;base64," . base64_encode($row["imagen"]) . "' style='height:200px;width:200px;'>
+                                <div class='card-body'>
+                                    <h5 class='card-title'>" . $row["descripcion"] . "</h5>
+                                    <p class='card-text'><b>Costo Puntos: </b>" . $row["costo_puntos"] . "</p>
+                                " ?>
+                    <a href="delete.php?id=<?php echo $row["Id_Promo"] ?>" class="btn btn-danger">Eliminar</a>
+            </div>
         </div>
-    </div>
-    </div>
-<?php
+        </div>
+    <?php
 }
-         
 ?>
-                
-            </div>
+</div>
+</div>
+</div>
+
+</div>
+
+<!-- Formulario para agregar nuevo usuario_administrativo -->
+<div class="modal fade" id="agregarAdminModal" tabindex="-1" role="dialog" aria-labelledby="agregarAdminModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="agregarAdminForm" method="POST" action="admin.php">
+                <!-- Agregué un campo oculto para identificar si la acción es agregar o editar -->
+                <input type="hidden" name="accion_admin" id="accion_admin" value="agregar">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agregarAdminModalLabel">Agregar Administrador</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre_admin_agregar">Nombre:</label>
+                        <input type="text" id="nombre_admin_agregar" name="nombre_admin_agregar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contrasena_admin_agregar">Contraseña:</label>
+                        <input type="password" id="contrasena_admin_agregar" name="contrasena_admin_agregar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ci_admin_agregar">CI:</label>
+                        <input type="text" id="ci_admin_agregar" name="ci_admin_agregar" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="agregar_admin" class="btn btn-primary">Agregar Administrativo</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
+<!-- Formulario para editar usuario_administrativo -->
+<div class="modal fade" id="editarAdminModal" tabindex="-1" role="dialog" aria-labelledby="editarAdminModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="editarAdminForm" method="POST" action="admin.php">
+                <!-- Agregué un campo oculto para identificar si la acción es agregar o editar -->
+                <input type="hidden" name="accion_admin" id="accion_admin" value="editar">
+                <input type="hidden" id="id_admin_editar" name="id_admin_editar">
 
-
-    
-
-
-
-
-
-
-    <!-- Modal para agregar usuario_administrativo -->
-    <div class="modal fade" id="agregarAdminModal" tabindex="-1" role="dialog" aria-labelledby="agregarAdminModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id="agregarAdminForm" method="POST" action="admin.php">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="agregarAdminModalLabel">Agregar Administrador</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarAdminModalLabel">Editar Administrador</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre_admin_editar">Nombre:</label>
+                        <input type="text" id="nombre_admin_editar" name="nombre_admin_editar" required>
                     </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="nombre_admin_agregar">Nombre:</label>
-                            <input type="text" id="nombre_admin_agregar" name="nombre_admin_agregar" required>
-                        </div>
 
-                        <div class="form-group">
-                            <label for="contrasena_admin_agregar">Contraseña:</label>
-                            <input type="password" id="contrasena_admin_agregar" name="contrasena_admin_agregar" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="contrasena_admin_editar">Contraseña:</label>
+                        <input type="password" id="contrasena_admin_editar" name="contrasena_admin_editar" required>
+                    </div>
 
-                        <div class="form-group">
-                            <label for="ci_admin_agregar">CI:</label>
-                            <input type="text" id="ci_admin_agregar" name="ci_admin_agregar" required>
-                        </div>
+                    <div class="form-group">
+                        <label for="ci_admin_editar">CI:</label>
+                        <input type="text" id="ci_admin_editar" name="ci_admin_editar" required>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" name="agregar_admin" class="btn btn-primary">Agregar Administrativo</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="editar_admin" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
         </div>
     </div>
-
-    <!-- Modal para editar usuario_administrativo -->
-    <div class="modal fade" id="editarAdminModal" tabindex="-1" role="dialog" aria-labelledby="editarAdminModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form id="editarAdminForm" method="POST" action="admin.php">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editarAdminModalLabel">Editar Administrador</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="nombre_admin_editar">Nombre:</label>
-                            <input type="text" id="nombre_admin_editar" name="nombre_admin_editar" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="contrasena_admin_editar">Contraseña:</label>
-                            <input type="password" id="contrasena_admin_editar" name="contrasena_admin_editar" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="ci_admin_editar">CI:</label>
-                            <input type="text" id="ci_admin_editar" name="ci_admin_editar" required>
-                        </div>
-
-                        <!-- Añade cualquier otro campo que necesites editar -->
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" name="editar_admin" class="btn btn-primary">Guardar Cambios</button>
-                    </div>
-                </form>
-            </div>
+</div>
+<!-- Modal para agregar promoción -->
+<div class="modal fade" id="agregarPromoModal" tabindex="-1" role="dialog" aria-labelledby="agregarPromoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="insertar.php" method="POST" enctype='multipart/form-data'>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="agregarPromoModalLabel">Agregar Promoción</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type='file' class="form-control mb-3" name='file' required>
+                    <input type="text" class="form-control mb-3" name="descripcion" placeholder="Descripción" required>
+                    <input type="text" class="form-control mb-3" name="costo_puntos" placeholder="Costo en Puntos" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" value="Upload" class="btn btn-warning">Guardar Datos</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+<!-- Modal para confirmar eliminación de usuario_administrativo -->
+<div class="modal fade" id="eliminarAdminModal" tabindex="-1" role="dialog" aria-labelledby="eliminarAdminModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="eliminarAdminForm" method="POST" action="admin.php">
+                <input type="hidden" name="accion_admin" id="accion_admin" value="eliminar">
+                <input type="hidden" id="id_admin_eliminar" name="id_admin_eliminar">
 
-    <!-- Modal para agregar promoción -->
-    <div class="modal fade" id="agregarPromoModal" tabindex="-1" role="dialog" aria-labelledby="agregarPromoModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <form action="insertar.php" method="POST" enctype='multipart/form-data'>
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="agregarPromoModalLabel">Agregar Promoción</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eliminarAdminModalLabel">Eliminar Administrador</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Para confirmar la eliminación, ingrese la contraseña del usuario administrativo:</p>
+                    <div class="form-group">
+                        <label for="contrasena_admin_eliminar">Contraseña:</label>
+                        <input type="password" id="contrasena_admin_eliminar" name="contrasena_admin_eliminar" required>
                     </div>
-                    <div class="modal-body">
-                        <input type='file' class="form-control mb-3" name='file' required>
-                        <input type="text" class="form-control mb-3" name="descripcion" placeholder="Descripción" required>
-                        <input type="text" class="form-control mb-3" name="costo_puntos" placeholder="Costo en Puntos" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" value="Upload" class="btn btn-warning">Guardar Datos</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="eliminar_admin" class="btn btn-danger">Eliminar Administrativo</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
-    <!-- Código adicional para mostrar productos de la tabla Promo -->
-    <!-- Añadir aquí el código que se encargará de las promociones -->
+<!-- Código adicional para mostrar productos de la tabla Promo -->
+<!-- Añadir aquí el código que se encargará de las promociones -->
 
-    <script>
-        // Configurar el modal de edición con los datos del usuario_administrativo seleccionado
-        $('.editarAdmin').on('click', function () {
-            var id_admin = $(this).data('id');
-            var nombre_admin = $(this).data('nombre');
-            var ci_admin = $(this).data('ci');
+<script>
+    // Configurar el modal de edición con los datos del usuario_administrativo seleccionado
+    $('.editarAdmin').on('click', function () {
+        var id_admin = $(this).data('id');
+        var nombre_admin = $(this).data('nombre');
+        var ci_admin = $(this).data('ci');
 
-            $('#id_admin_editar').val(id_admin);
-            $('#nombre_admin_editar').val(nombre_admin);
-            $('#ci_admin_editar').val(ci_admin);
-        });
-    </script>
+        $('#id_admin_editar').val(id_admin);
+        $('#nombre_admin_editar').val(nombre_admin);
+        $('#ci_admin_editar').val(ci_admin);
+    });
+</script>
+
+<?php
+// ... (código anterior)
+
+// Procesar el formulario para agregar un nuevo usuario administrativo
+if (isset($_POST['agregar_admin'])) {
+    $nombre_admin_agregar = $_POST['nombre_admin_agregar'];
+    $contrasena_admin_agregar = $_POST['contrasena_admin_agregar'];
+    $ci_admin_agregar = $_POST['ci_admin_agregar'];
+
+    $query_agregar_admin = "INSERT INTO Usuario_administrativo (Nombre, Contraseña, CI) VALUES ('$nombre_admin_agregar', '$contrasena_admin_agregar', '$ci_admin_agregar')";
+
+    if (mysqli_query($link, $query_agregar_admin)) {
+        
+        echo '<script>window.location.href="admin.php";</script>';
+    } else {
+        echo "Error al agregar usuario administrativo: " . mysqli_error($link);
+    }
+}
+
+// Procesar el formulario para editar un usuario administrativo
+if (isset($_POST['editar_admin'])) {
+    $id_admin_editar = $_POST['id_admin_editar'];
+    $nombre_admin_editar = $_POST['nombre_admin_editar'];
+    $contrasena_admin_editar = $_POST['contrasena_admin_editar'];
+    $ci_admin_editar = $_POST['ci_admin_editar'];
+
+    $query_editar_admin = "UPDATE Usuario_administrativo SET Nombre='$nombre_admin_editar', Contraseña='$contrasena_admin_editar', CI='$ci_admin_editar' WHERE ID_UA='$id_admin_editar'";
+
+    if (mysqli_query($link, $query_editar_admin)) {
+        
+        echo '<script>window.location.href="admin.php";</script>';
+    } else {
+        echo "Error al editar usuario administrativo: " . mysqli_error($link);
+    }
+}
+
+// Procesar el formulario para eliminar un usuario administrativo
+if (isset($_POST['eliminar_admin'])) {
+    $id_admin_eliminar = $_POST['id_admin_eliminar'];
+    $contrasena_admin_eliminar = $_POST['contrasena_admin_eliminar'];
+
+    // Verificar la contraseña antes de eliminar
+    $query_verificar_contrasena = "SELECT ID_UA FROM Usuario_administrativo WHERE ID_UA='$id_admin_eliminar' AND Contraseña='$contrasena_admin_eliminar'";
+    $result_verificar_contrasena = mysqli_query($link, $query_verificar_contrasena);
+
+    if (mysqli_num_rows($result_verificar_contrasena) > 0) {
+        // Contraseña correcta, proceder con la eliminación
+        $query_eliminar_admin = "DELETE FROM Usuario_administrativo WHERE ID_UA='$id_admin_eliminar'";
+
+        if (mysqli_query($link, $query_eliminar_admin)) {
+            echo '<script>alert("Usuario administrativo eliminado correctamente."); window.location.href="admin.php";</script>';
+        } else {
+            echo "Error al eliminar usuario administrativo: " . mysqli_error($link);
+        }
+    } else {
+        echo '<script>alert("Contraseña incorrecta. No se pudo eliminar el usuario administrativo."); window.location.href="admin.php";</script>';
+    }
+}
+?>
 
 </body>
 
