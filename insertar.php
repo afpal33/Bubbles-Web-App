@@ -1,5 +1,21 @@
 <?php
-include("database.php");
+$con = conectarBaseDatos();
+
+function conectarBaseDatos()
+{
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "bubbles_db";
+
+    $link = mysqli_connect($servername, $username, $password, $dbname);
+
+    if (!$link) {
+        die("Error de conexión: " . mysqli_connect_error());
+    }
+
+    return $link;
+}
 
 if (isset($_FILES["file"])) {
     $fileName = basename($_FILES["file"]["name"]);
@@ -19,11 +35,12 @@ if (isset($_FILES["file"])) {
         $query = mysqli_query($con, $sql);
 
         if ($query) {
-            header("Location: /admin.php");
-            exit();
+            echo "File Uploaded Successfully!";
+            header("Location: admin.php");
         } else {
-            echo "Error en la inserción: " . mysqli_error($con);
+            echo "File Upload Failed!";
         }
     }
 }
 ?>
+

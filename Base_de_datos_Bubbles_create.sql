@@ -4,11 +4,13 @@
 -- tables
 -- Table: Promo
 CREATE TABLE Promo (
-    Id_Promo int  NOT NULL AUTO_INCREMENT,
-    descripcion Varchar(50)  NOT NULL,
-    costo_puntos int  NOT NULL,
+    Id_Promo INT NOT NULL AUTO_INCREMENT,
+    descripcion VARCHAR(50) NOT NULL,
+    costo_puntos INT NOT NULL,
+    imagen MEDIUMBLOB, -- Cambio aquí para agregar la columna de imagen
     CONSTRAINT Promo_pk PRIMARY KEY (Id_Promo)
 );
+
 
 -- Table: Registro_compras_uso_servicios
 CREATE TABLE Registro_compras_uso_servicios (

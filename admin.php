@@ -169,26 +169,40 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
 
         <div class="container mt-5">
             <div class="row">
+                
+                
                 <?php
-                $promoQuery = mysqli_query($con, "SELECT * FROM Promo");
-
-                while ($promoRow = mysqli_fetch_assoc($promoQuery)) {
-                    echo
-                    "<div class='col-lg-4 col-md-6 col-sm-12 mt-4 mt-sm-0'>
-                            <div class='card mt-3' style='width: 18rem;'>
-                                <img class='ms-5 mt-3' src='data:image;base64," . base64_encode($promoRow["imagen"]) . "' style='height:200px;width:200px;'>
-                                <div class='card-body'>
-                                    <h5 class='card-title'>" . $promoRow["descripcion"] . "</h5>
-                                    <p class='card-text'><b>Costo en Puntos: </b>" . $promoRow["costo_puntos"] . "</p>
-                                </div>
-                                <a href='#' class='btn btn-danger'>Eliminar</a>
-                            </div>
-                        </div>";
-                }
-                ?>
+                $query = mysqli_query($con, "SELECT * FROM Promo");
+            while ($row = mysqli_fetch_assoc($query)) {
+                echo
+                "<div class='col-lg-4 col-md-6 col-sm-12 mt-4 mt-sm-0'>
+                        <div class='card  mt-3' style='width: 18rem;'>
+                            <img class='ms-5 mt-3' src='data:image;base64," . base64_encode($row["imagen"]) . "' style='height:200px;width:200px;'>
+                            <div class='card-body'>
+                                <h5 class='card-title'>" . $row["descripcion"] . "</h5>
+                                <p class='card-text'><b>Costo Puntos: </b>" . $row["costo_puntos"] . "</p>
+                            " ?>
+                <a href="delete.php?id=<?php echo $row["Id_Promo"] ?>" class="btn btn-danger">Eliminar</a>
+        </div>
+    </div>
+    </div>
+<?php
+}
+         
+?>
+                
             </div>
         </div>
     </div>
+
+
+
+    
+
+
+
+
+
 
     <!-- Modal para agregar usuario_administrativo -->
     <div class="modal fade" id="agregarAdminModal" tabindex="-1" role="dialog" aria-labelledby="agregarAdminModalLabel" aria-hidden="true">
