@@ -1,8 +1,51 @@
 <?php
-// Datos de ejemplo del usuario (pueden ser recuperados de la base de datos)
-$nombreUsuario = "Usuario Ejemplo";
-$correoUsuario = "usuario@example.com"; // Reemplazar con el correo real del usuario
-$puntosClienteRegular = 150; // Obtén esta información de la base de datos
+// Inicia la sesión
+session_start();
+
+// Función para conectar a la base de datos
+function conectarBaseDatos()
+{
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "bubbles_db";
+
+    $link = mysqli_connect($servername, $username, $password, $dbname);
+
+    if (!$link) {
+        die("Error de conexión: " . mysqli_connect_error());
+    }
+
+    return $link;
+}
+
+// Obtener el nombre de usuario y puntos de cliente regular desde la base de datos
+function obtenerDatosUsuario($idUsuario)
+{
+    $link = conectarBaseDatos();
+
+    $query = "SELECT Nombre, puntos_compra_acumulados, Correo, Telefono, Direccion FROM usuario_cliente WHERE id_usuario = $idUsuario";
+    $result = mysqli_query($link, $query);
+
+    if ($result) {
+        $userData = mysqli_fetch_assoc($result);
+        mysqli_free_result($result);
+        mysqli_close($link);
+        return $userData;
+    } else {
+        echo "Error al obtener datos de usuario: " . mysqli_error($link);
+        mysqli_close($link);
+        return null;
+    }
+}
+
+// Datos de ejemplo del usuario (pueden ser recuperados de la base de datos después del inicio de sesión)
+$idUsuario = 1; // Reemplazar con el ID de usuario real después del inicio de sesión
+$userData = obtenerDatosUsuario($idUsuario);
+
+// Verifica si el usuario está autenticado
+$usuarioAutenticado = isset($userData['Nombre']);
+
 ?>
 
 <!DOCTYPE html>
@@ -82,14 +125,20 @@ $puntosClienteRegular = 150; // Obtén esta información de la base de datos
         </center>
     </header>
     <div class="container">
-        <div class="user-info">
-            <img src="Images/usuario.jpg" alt="Foto de perfil">
-            <div>
-                <h1 class="display-4"><?php echo $nombreUsuario; ?></h1> <!-- Utilicé una clase de Bootstrap para encabezado grande -->
-                <p class="lead">Correo Electrónico: <?php echo $correoUsuario; ?></p> <!-- Utilicé una clase de Bootstrap para texto grande -->
-                <p class="lead">Puntos de Cliente Regular: <?php echo $puntosClienteRegular; ?></p> <!-- Utilicé una clase de Bootstrap para texto grande -->
+        <?php if ($usuarioAutenticado) : ?>
+            <div class="user-info">
+                <img src="Images/usuario.jpg" alt="Foto de perfil"> <!-- Reemplazar con la ruta real de la imagen -->
+                <div>
+                    <h1 class="display-4"><?php echo $userData['Nombre']; ?></h1>
+                    <p class="lead">Correo: <?php echo $userData['Correo']; ?></p>
+                    <p class="lead">Telefono: <?php echo $userData['Telefono']; ?></p>
+                    <p class="lead">Direccion: <?php echo $userData['Direccion']; ?></p>
+                    <p class="lead">Puntos de Cliente Regular: <?php echo $userData['puntos_compra_acumulados']; ?></p>
+                </div>
             </div>
-        </div>
+        <?php else : ?>
+            <p>Usuario no autenticado. Debes iniciar sesión.</p>
+        <?php endif; ?>
     </div>
 </body>
 
