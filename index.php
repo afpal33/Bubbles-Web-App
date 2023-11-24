@@ -1,7 +1,23 @@
 <?php
 	// Iniciar sesión
 	session_start();
+    $con = conectarBaseDatos();
 
+    function conectarBaseDatos()
+    {
+        $servername = "localhost";
+        $username = "root";
+        $password = "";
+        $dbname = "bubbles_db";
+    
+        $link = mysqli_connect($servername, $username, $password, $dbname);
+    
+        if (!$link) {
+            die("Error de conexión: " . mysqli_connect_error());
+        }
+    
+        return $link;
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -141,7 +157,7 @@ footer {
                     <a role="button" href="#servicios" class="nav-link rounded-5" id="cat" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Servicios</a>
                 </li>
                     <li class="nav-item" role="presentation">
-                        <a role="button" href="#pedidos" class="nav-link rounded-5" id="ubi" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Pedidos</a>
+                        <a role="button" href="#promociones" class="nav-link rounded-5" id="ubi" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Promociones</a>
                     </li>
                 <li class="nav-item" role="presentation">
                     <a role="button" href="#contacto" class="nav-link rounded-5" id="ubi" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Contacto</a>
@@ -279,7 +295,7 @@ footer {
                 <br>
             </div>
             <div id="servicios" class="tabcontent">
-                <h1 style="font-size:60px">Servicios y ofertas</h1>
+                <h1 style="font-size:60px">Servicios</h1>
                 <br>
                 <ul style="color:black">
                 <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px;">
@@ -315,96 +331,36 @@ footer {
     </figure>
 
 </div>
-<div style="text-align: center; margin-top: 30px;">
-    <p style="color: black; font-size: 20px;">
-        Puedes canjear tus puntos de cliente regular para obtener ofertas especiales y más.
-    </p>
-    <a href="ofertas.php" style="display: inline-block; padding: 10px 20px; background-color: #1E90FF; color: white; text-decoration: none; font-size: 18px; border-radius: 5px;">Ir a ofertas</a>
-</div>
+
                 </ul>
-                <div id="pedidos" class="tabcontent">
-                <form method="POST" action="index.php">
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <h1 style="font-size:60px">Mis pedidos</h1>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-                
-                <br>
-                <br>
-                <?php
-                if (isset($_SESSION['username'])) { ?>
-                    <?php
-                    include("sql.php");
-                    $link=Conectarse();
-                            if ($link==false)
-                            {
-                                echo "<H1>Error en apertura de bases de datos.</H1>";
-                                exit();
-                            }
-                        
-                        $result=mysqli_query($link,"select * from carrito");
-                    ?>
-                    
-                    
-                    <center>
-                    <table BORDER=5 CELLSPACING=1 CELLPADDING=1 bordercolor=black>
-                        <TR>
-                            <TD><b><font color="black">&nbsp;nombre_usuario&nbsp;</font></b></TD>
-                            <TD><b><font color="black">&nbsp;producto&nbsp;</font></b></TD>
-                            <TD><b><font color="black">&nbsp;cantidad&nbsp;</font></b></TD>
-                            <TD><b><font color="black">&nbsp;precio_unitario&nbsp;</font></b></TD>
-                            <TD><b><font color="black">&nbsp;total&nbsp;</font></b></TD>
-                            </TR>
-                            <?php
-                                while($row = mysqli_fetch_array($result)) {
-                                    echo "<TR>";
-                                    echo "<TD>&nbsp;" . $row["nombre_usuario"] . "</TD>";
-                                    echo "<TD>&nbsp;" . $row["producto"] . "</TD>";
-                                    echo "<TD>&nbsp;" . $row["cantidad"] . "</TD>";
-                                    echo "<TD>&nbsp;" . $row["precio_unitario"] . "</TD>";
-                                    echo "<TD>&nbsp;" . $row["total"] . "</TD>";
-                                    echo "</TR>";
-                                }
-                                //liberamos memoria que ocupa la consulta...
-                                mysqli_free_result($result);
-                                
-                                //cerramos la conexión con el motor de BD
-                                mysqli_close($link);
-                            ?>
-                    </table>
-                    <center>
-                        <br>
-                        <br>
-                        <table BORDER=0 CELLSPACING=1 CELLPADDING=1 bordercolor=black>
-                        <TR>
-                            <TD><a href="abm.php?accion=alta">Agregar</a></TD>
-                            <TD><a href="abm.php?accion=modificacion">Modificar</a></TD>
-                            <TD><a href="abm.php?accion=baja">Borrar</a></TD>
-                            
-                            </TR>
-                        <br>
-                        
-                        <br></table>
-                    </center>
-                <?php } else {?>
-                    <h1 style="color:black;font-size:60px">inicie sesión o registrese para visualizar esta sección</h1>
-                <?php }
-                ?>
+                <div id="promociones" class="tabcontent">
+                <h1 style="font-size:60px">Promociones</h1>
+                <div style="text-align: center; margin-top: 30px;">
+                    <p style="color: black; font-size: 20px;">
+                        Puedes canjear tus puntos de cliente regular para obtener ofertas especiales y más.
+                    </p>
                 </div>
+                
+                <div class="container mt-5">
+            <div class="row">
+                <?php
+                $query = mysqli_query($con, "SELECT * FROM Promo");
+                while ($row = mysqli_fetch_assoc($query)) {
+                    echo
+                    "<div class='col-lg-4 col-md-6 col-sm-12 mt-4 mt-sm-0'>
+                            <div class='card  mt-3' style='width: 18rem;'>
+                                <img class='ms-5 mt-3' src='data:image;base64," . base64_encode($row["imagen"]) . "' style='height:200px;width:200px;'>
+                                <div class='card-body'>
+                                    <h5 class='card-title'>" . $row["descripcion"] . "</h5>
+                                    <p class='card-text'><b>Costo Puntos: </b>" . $row["costo_puntos"] . "</p>
+                                " ?>
+                    <a href="delete.php?id=<?php echo $row["Id_Promo"] ?>" class="btn btn-primary">Canjear</a>
+            </div>
+        </div>
+        </div>
+    <?php
+}
+?>
                 <div id="contacto" class="tabcontent">
                 <br>
                 <br>

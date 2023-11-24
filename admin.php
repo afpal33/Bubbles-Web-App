@@ -100,12 +100,17 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
 </head>
 
 <body>
-    <header>
-        <center>
-            <br>
-            <img src="Images/bubbles.png" style="width:200px;height:70px">
-        </center>
-    </header>
+        <header>
+            <center>
+                <br>
+                <img src="Images/bubbles.png" style="width:200px;height:70px">
+                <!-- Agrega este botón de cierre de sesión -->
+                <?php if (isset($_SESSION['username'])): ?>
+                    <a href="logout.php" class="btn btn-danger">Cerrar Sesión</a>
+                <?php endif; ?>
+            </center>
+        </header>
+
 
     <div class="container">
         <h1>Gestión de Usuarios</h1>
@@ -127,11 +132,20 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
                             <td><?= $row['ID_usuario'] ?></td>
                             <td><?= $row['Nombre'] ?></td>
                             <td><?= $row['Puntos_compra_acumulados'] ?></td>
+                            <!-- Agrega un botón para agregar puntos directamente -->
+                            <td>
+                                <form method="POST" action="admin.php">
+                                    <input type="hidden" name="id_usuario_agregar_puntos" value="<?= $row['ID_usuario'] ?>">
+                                    <button type="submit" name="agregar_puntos" class="btn btn-info">Agregar 100 Puntos</button>
+                                </form>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
+
+        
 
         <!-- Tabla de usuario_administrativo -->
             <h2>Usuarios Administrativos</h2>
@@ -415,6 +429,20 @@ if (isset($_POST['eliminar_admin'])) {
     }
 
     mysqli_stmt_close($stmt);
+}
+
+// Procesar el formulario para agregar puntos
+if (isset($_POST['agregar_puntos'])) {
+    $id_usuario_agregar_puntos = $_POST['id_usuario_agregar_puntos'];
+
+    // Actualizar la cantidad de puntos del usuario agregando 100 puntos
+    $query_agregar_puntos = "UPDATE usuario_cliente SET Puntos_compra_acumulados = Puntos_compra_acumulados + 100 WHERE ID_usuario = '$id_usuario_agregar_puntos'";
+
+    if (mysqli_query($link, $query_agregar_puntos)) {
+        echo '<script>window.location.href="admin.php";</script>';
+    } else {
+        echo "Error al agregar puntos: " . mysqli_error($link);
+    }
 }
 
 
