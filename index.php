@@ -18,6 +18,49 @@
     
         return $link;
     }
+
+    function obtenerPuntosAcumulados($idUsuario)
+{
+    $link = conectarBaseDatos();
+
+    $query = "SELECT puntos_compra_acumulados FROM usuario_cliente WHERE id_usuario = $idUsuario";
+    $result = mysqli_query($link, $query);
+
+    if ($result) {
+        $puntosData = mysqli_fetch_assoc($result);
+        mysqli_free_result($result);
+        mysqli_close($link);
+        return $puntosData['puntos_compra_acumulados'];
+    } else {
+        echo "Error al obtener puntos acumulados: " . mysqli_error($link);
+        mysqli_close($link);
+        return 0;
+    }
+}
+
+// Verificar si el usuario está autenticado
+if (isset($_SESSION['username'])) {
+    // Datos de ejemplo del usuario (pueden ser recuperados de la base de datos después del inicio de sesión)
+    $idUsuario = $_SESSION['ID_usuario'];
+    $username = $_SESSION['username']; // Reemplazar con el ID de usuario real después del inicio de sesión
+
+    // Obtener la cantidad de puntos acumulados del usuario desde la base de datos
+    $puntosAcumulados = obtenerPuntosAcumulados($idUsuario);
+
+    // Almacena la cantidad de puntos en la variable de sesión
+    $_SESSION['puntos_acumulados'] = $puntosAcumulados;
+
+    // Muestra el alerta después de iniciar sesión
+    echo "<script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var puntosAcumulados = $puntosAcumulados;
+                var username = '$username';
+                alert('¡Bienvenido! '+ username +' Tienes ' + puntosAcumulados + ' puntos en tu cuenta.');
+            });
+          </script>";
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -167,7 +210,7 @@ footer {
         <?php if(isset($_SESSION['username'])): ?>
             <a id="button2" href="logout.php" class="btn btn-primary btn-lg rounded-5 active" role="button" style="background-color: rgb(0, 107, 247);">Cerrar Sesión</a>
             <?php if(isset($_SESSION['username'])): ?>
-                <p id="welcome">Bienvenido, <?php echo $_SESSION['username']; ?></p>
+                
                 <a id="button2" href="InfoUsuario.php" class="btn btn-primary btn-lg rounded-5 active role="button" style="background-color: aliceblue; color: rgb(0, 107, 247)">Perfil</a>
             <?php endif; ?>
         <?php else: ?>
