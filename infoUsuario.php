@@ -40,8 +40,9 @@ function obtenerDatosUsuario($idUsuario)
 }
 
 // Datos de ejemplo del usuario (pueden ser recuperados de la base de datos después del inicio de sesión)
-$idUsuario = 1; // Reemplazar con el ID de usuario real después del inicio de sesión
-$userData = obtenerDatosUsuario($idUsuario);
+$id_usuario = $_SESSION['ID_usuario']; // Reemplazar con el ID de usuario real después del inicio de sesión
+$userData = obtenerDatosUsuario($id_usuario); // Corregido el nombre de la variable
+
 
 // Verifica si el usuario está autenticado
 $usuarioAutenticado = isset($userData['Nombre']);
