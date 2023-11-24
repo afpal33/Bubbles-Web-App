@@ -161,6 +161,10 @@
                     session_start();
                     $_SESSION["username"] = $username;
 
+                    // Obtener el ID del usuario y establecer la variable de sesión
+                    $id_usuario = obtenerIdUsuario($username);
+                    $_SESSION['ID_usuario'] = $id_usuario;
+
                     // Redirigir al usuario a la página de inicio
                     header("Location: index.php");
                     exit();
@@ -173,6 +177,11 @@
                         // Iniciar sesión
                         session_start();
                         $_SESSION["username"] = $username;
+
+                        // Obtener el ID del usuario administrativo y establecer la variable de sesión
+                        $id_usuario_admin = obtenerIdUsuarioAdmin($username);
+                        $_SESSION['ID_usuario_admin'] = $id_usuario_admin;
+
     
                         // Redirigir al usuario a la página de inicio
                         header("Location: admin.php");
@@ -182,7 +191,22 @@
                             echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";}
                 }
             }
-
+            function obtenerIdUsuario($username) {
+                global $conn;
+                $sql = "SELECT ID_usuario FROM usuario_cliente WHERE Nombre = '$username'";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                return $row['ID_usuario'];
+            }
+            
+            // Función para obtener el ID del usuario administrativo
+            function obtenerIdUsuarioAdmin($username) {
+                global $conn;
+                $sql = "SELECT ID_usuario_admin FROM usuario_administrativo WHERE Nombre = '$username'";
+                $result = mysqli_query($conn, $sql);
+                $row = mysqli_fetch_assoc($result);
+                return $row['ID_usuario_admin'];
+            }
             // Cerrar la conexión a la base de datos
             mysqli_close($conn);
         ?>

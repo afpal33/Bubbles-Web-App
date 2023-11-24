@@ -354,7 +354,7 @@ footer {
                                     <h5 class='card-title'>" . $row["descripcion"] . "</h5>
                                     <p class='card-text'><b>Costo Puntos: </b>" . $row["costo_puntos"] . "</p>
                                 " ?>
-                    <a href="delete.php?id=<?php echo $row["Id_Promo"] ?>" class="btn btn-primary">Canjear</a>
+                        <a href="canjear.php?id=<?php echo $row["Id_Promo"] ?>&costo_puntos=<?php echo $row["costo_puntos"] ?>" class="btn btn-primary">Canjear</a>
             </div>
         </div>
         </div>
