@@ -42,7 +42,7 @@ function obtenerDatosUsuario($idUsuario)
 // Datos de ejemplo del usuario (pueden ser recuperados de la base de datos después del inicio de sesión)
 $id_usuario = $_SESSION['ID_usuario']; // Reemplazar con el ID de usuario real después del inicio de sesión
 $userData = obtenerDatosUsuario($id_usuario); // Corregido el nombre de la variable
-
+$link = conectarBaseDatos();
 
 // Verifica si el usuario está autenticado
 $usuarioAutenticado = isset($userData['Nombre']);
@@ -79,7 +79,7 @@ $usuarioAutenticado = isset($userData['Nombre']);
             padding: 0 20px;
         }
 
-        
+
 
         .container {
             margin-top: 150px;
@@ -148,7 +148,7 @@ $usuarioAutenticado = isset($userData['Nombre']);
         align-items: center;
         border-radius: 10vh;
         flex-grow: 0;
-        
+
     }
     .lead2{
         font-size: 10vh;
@@ -172,8 +172,10 @@ $usuarioAutenticado = isset($userData['Nombre']);
     </header>
     <div class="container">
         <?php if ($usuarioAutenticado) : ?>
+            <br>
+            <h1>DATOS CLIENTE</h1>
             <div class="user-info">
-                <img src="Images/usuario.jpg" alt="Foto de perfil"> <!-- Reemplazar con la ruta real de la imagen -->
+                <img src="Images/lobo.jpg" alt="Foto de perfil"> <!-- Reemplazar con la ruta real de la imagen -->
                 <div>
                     <div class="cont">
                         <h1 class="display-4"></h1></h1></h1></h1></h1></h1><?php echo $userData['Nombre']; ?></h1>
@@ -194,11 +196,53 @@ $usuarioAutenticado = isset($userData['Nombre']);
                     <p class="lead3">Puntos</p>
                  </div>
 
+            <!-- Tabla de usuario_cliente -->
+
             </div>
+            <h2>HISTORIAL SERVICIOS</h2>
+            <br>
+            <br>
+        <div class="table-container">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id servicio</th>
+                        <th>Descripción</th>
+                        <th>Fecha</th>
+                        <th>Costo</th>
+                        <th>Puntos</th>
+                        <th>Sucursal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $id_user=$id_usuario;
+                    $query = "SELECT id_serv, Descripcion, Fecha, Costo, Puntos_obtenidos, Sucursal FROM servicio_usuario WHERE id_usuario = $id_user";
+                    $result_serv = mysqli_query($link, $query);
+                    // Modificar la consulta para obtener también correo y teléfono
+                    //$result_cliente = mysqli_query($link, "SELECT id_serv, Descripcion, Fecha, Costo, Puntos_obtenidos, Sucursal FROM servicio_usuario WHERE id_usuario = $id_usuario");
+                    while ($row = mysqli_fetch_array($result_serv)) :
+                    ?>
+                        <tr>
+                            <td><?= $row['id_serv'] ?></td>
+                            <td><?= $row['Descripcion'] ?></td>
+                            <td><?= $row['Fecha'] ?></td>
+                            <td><?= $row['Costo'] ?></td>
+                            <td><?= $row['Puntos_obtenidos'] ?></td>
+                            <td><?= $row['Sucursal'] ?></td>
+                        </tr>
+                    <?php endwhile; ?>
+                </tbody>
+            </table>
+        </div>
+        <br>
+        <br>
+        <br>
         <?php else : ?>
             <p>Usuario no autenticado. Debes iniciar sesión.</p>
         <?php endif; ?>
     </div>
+
 </body>
 
 </html>

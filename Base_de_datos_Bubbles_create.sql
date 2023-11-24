@@ -62,5 +62,18 @@ CREATE TABLE usuario_cliente (
     CONSTRAINT usuario_cliente_pk PRIMARY KEY (ID_usuario)
 );
 
+-- Table: servicio_usuario
+CREATE TABLE servicio_usuario (
+    id_serv int  NOT NULL AUTO_INCREMENT,
+    Descripcion char(30)  NOT NULL,
+    Fecha date  NOT NULL,
+    Costo int NOT NULL,
+    Puntos_obtenidos int  NOT NULL,
+    Sucursal Varchar(50)  NOT NULL,
+    id_usuario int NOT NULL,
+    CONSTRAINT servicio_usuario_pk PRIMARY KEY (id_serv)
+);
+
+
 -- End of file.
 
