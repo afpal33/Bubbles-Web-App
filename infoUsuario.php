@@ -166,6 +166,7 @@ $usuarioAutenticado = isset($userData['Nombre']);
         <center>
             <br>
             <img src="Images/bubbles.png" style="width:200px;height:70px">
+            <a href="index.php" class="btn btn-primary btn-lg rounded-5 active" role="button">Menú</a>
         </center>
     </header>
     <div class="container">

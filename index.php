@@ -168,6 +168,7 @@ footer {
             <a id="button2" href="logout.php" class="btn btn-primary btn-lg rounded-5 active" role="button" style="background-color: rgb(0, 107, 247);">Cerrar Sesión</a>
             <?php if(isset($_SESSION['username'])): ?>
                 <p id="welcome">Bienvenido, <?php echo $_SESSION['username']; ?></p>
+                <a id="button2" href="InfoUsuario.php" class="btn btn-primary btn-lg rounded-5 active role="button" style="background-color: aliceblue; color: rgb(0, 107, 247)">Perfil</a>
             <?php endif; ?>
         <?php else: ?>
         <a id="button" href="login.php" class="btn btn-primary btn-lg rounded-5 active" role="button" style="background-color: rgb(0, 107, 247);">Iniciar Sesión</a>
