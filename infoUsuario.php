@@ -78,8 +78,14 @@ $usuarioAutenticado = isset($userData['Nombre']);
             padding: 0 20px;
         }
 
+        
+
         .container {
             margin-top: 150px;
+            background-color: aliceblue;
+            border-radius: 10vh;
+            align-items: center;
+            text-align: center;
         }
 
         h1,
@@ -113,6 +119,44 @@ $usuarioAutenticado = isset($userData['Nombre']);
         .user-info div {
             max-width: 600px; /* Limité el ancho para que no ocupe todo el contenedor */
         }
+        .cont{
+            background-color: #1E90FF;
+            margin-top: 4vh;
+            margin-bottom: 4vh;
+            color: aliceblue;
+            font-size: 4vh;
+            border-radius: 2vh;
+            text-align: center;
+        }
+        .cont2{
+            margin-top: 4vh;
+            margin-bottom: 4vh;
+            color: #333;
+            font-size: 4vh;
+            border-radius: 2vh;
+            text-align: center;
+            align-items: center;
+        }
+        .additional-section {
+        margin-left: 10%;
+        padding-top: 4vh;
+        width: 800px;
+        height: 300px;
+        background-color: #1E90FF;
+        text-align: center;
+        align-items: center;
+        border-radius: 10vh;
+        flex-grow: 0;
+        
+    }
+    .lead2{
+        font-size: 10vh;
+        color: aliceblue;
+    }
+    .lead3{
+        font-size: 2vh;
+        color: aliceblue;
+    }
     </style>
     <title>Perfil de Usuario</title>
 </head>
@@ -129,12 +173,25 @@ $usuarioAutenticado = isset($userData['Nombre']);
             <div class="user-info">
                 <img src="Images/usuario.jpg" alt="Foto de perfil"> <!-- Reemplazar con la ruta real de la imagen -->
                 <div>
-                    <h1 class="display-4"><?php echo $userData['Nombre']; ?></h1>
-                    <p class="lead">Correo: <?php echo $userData['Correo']; ?></p>
-                    <p class="lead">Telefono: <?php echo $userData['Telefono']; ?></p>
-                    <p class="lead">Direccion: <?php echo $userData['Direccion']; ?></p>
-                    <p class="lead">Puntos de Cliente Regular: <?php echo $userData['puntos_compra_acumulados']; ?></p>
+                    <div class="cont">
+                        <h1 class="display-4"></h1></h1></h1></h1></h1></h1><?php echo $userData['Nombre']; ?></h1>
+                    </div>
+                    <div class="cont2">
+                        <p class="lead">Correo: <?php echo $userData['Correo']; ?></p>
+                    </div>
+                    <div class="cont2">
+                        <p class="lead">Telefono: <?php echo $userData['Telefono']; ?></p>
+                    </div>
+                    <div class="cont2">
+                        <p class="lead">Direccion: <?php echo $userData['Direccion']; ?></p>
+                    </div>
                 </div>
+                <div class="additional-section">
+                <!-- Nueva sección a la derecha -->
+                    <p class="lead2"><?php echo $userData['puntos_compra_acumulados']; ?></p>
+                    <p class="lead3">Puntos</p>
+                 </div>
+
             </div>
         <?php else : ?>
             <p>Usuario no autenticado. Debes iniciar sesión.</p>
