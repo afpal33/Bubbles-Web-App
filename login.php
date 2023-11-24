@@ -132,84 +132,101 @@
                 <input type="submit" value="INGRESAR">
             </form>
             <?php
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "bubbles_db";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "bubbles_db";
 
-            // Conexión a la base de datos
-            $conn = mysqli_connect($servername, $username, $password, $dbname);
+// Conexión a la base de datos
+$conn = mysqli_connect($servername, $username, $password, $dbname);
 
-            // Verificar la conexión
-            if (!$conn) {
-                die("Connection failed: " . mysqli_connect_error());
-            }
+// Verificar la conexión
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
+}
 
-            // Verificar si el formulario ha sido enviado
-            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+// Verificar si el formulario ha sido enviado
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-                // Obtener los valores del formulario
-                $username = $_POST["username"];
-                $password = $_POST["password"];
-                // Consultar la base de datos para verificar las credenciales del usuario
-                $sql = "SELECT * FROM usuario_cliente WHERE Nombre = '$username' AND Contraseña = '$password'";
-                $result = mysqli_query($conn, $sql);
+    // Obtener los valores del formulario
+    $username = mysqli_real_escape_string($conn, $_POST["username"]);
+    $password = mysqli_real_escape_string($conn, $_POST["password"]);
 
-                // Verificar si se encontró un usuario con esas credenciales
-                if (mysqli_num_rows($result) == 1) {
-                    // Iniciar sesión
-                    session_start();
-                    $_SESSION["username"] = $username;
+    // Consultar la base de datos para verificar las credenciales del usuario
+    $sql = "SELECT * FROM usuario_cliente WHERE Nombre = '$username' AND Contraseña = '$password'";
+    $result = mysqli_query($conn, $sql);
 
-                    // Obtener el ID del usuario y establecer la variable de sesión
-                    $id_usuario = obtenerIdUsuario($username);
-                    $_SESSION['ID_usuario'] = $id_usuario;
+    // Verificar si se encontró un usuario con esas credenciales
+    if ($result && mysqli_num_rows($result) == 1) {
+        // Iniciar sesión
+        session_start();
+        $_SESSION["username"] = $username;
 
-                    // Redirigir al usuario a la página de inicio
-                    header("Location: index.php");
-                    exit();
-                } else {
-                    $sql = "SELECT * FROM usuario_administrativo WHERE Nombre = '$username' AND Contraseña = '$password'";
-                    $result = mysqli_query($conn, $sql);
-    
-                    // Verificar si se encontró un usuario con esas credenciales
-                    if (mysqli_num_rows($result) == 1) {
-                        // Iniciar sesión
-                        session_start();
-                        $_SESSION["username"] = $username;
+        // Obtener el ID del usuario y establecer la variable de sesión
+        $id_usuario = obtenerIdUsuario($username);
+        $_SESSION['ID_usuario'] = $id_usuario;
 
-                        // Obtener el ID del usuario administrativo y establecer la variable de sesión
-                        $id_usuario_admin = obtenerIdUsuarioAdmin($username);
-                        $_SESSION['ID_usuario_admin'] = $id_usuario_admin;
+        // Redirigir al usuario a la página de inicio
+        header("Location: index.php");
+        exit();
+    } else {
+        // Verificar en la tabla de usuario administrativo
+        $sql_admin = "SELECT * FROM usuario_administrativo WHERE Nombre = '$username' AND Contraseña = '$password'";
+        $result_admin = mysqli_query($conn, $sql_admin);
 
-    
-                        // Redirigir al usuario a la página de inicio
-                        header("Location: admin.php");
-                        exit();
-                    }
-                        else{// Mostrar un mensaje de error si no se encontró un usuario con esas credenciales
-                            echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";}
-                }
-            }
-            function obtenerIdUsuario($username) {
-                global $conn;
-                $sql = "SELECT ID_usuario FROM usuario_cliente WHERE Nombre = '$username'";
-                $result = mysqli_query($conn, $sql);
-                $row = mysqli_fetch_assoc($result);
-                return $row['ID_usuario'];
-            }
-            
-            // Función para obtener el ID del usuario administrativo
-            function obtenerIdUsuarioAdmin($username) {
-                global $conn;
-                $sql = "SELECT ID_usuario_admin FROM usuario_administrativo WHERE Nombre = '$username'";
-                $result = mysqli_query($conn, $sql);
-                $row = mysqli_fetch_assoc($result);
-                return $row['ID_usuario_admin'];
-            }
-            // Cerrar la conexión a la base de datos
-            mysqli_close($conn);
-        ?>
+        if ($result_admin && mysqli_num_rows($result_admin) == 1) {
+            // Iniciar sesión
+            session_start();
+            $_SESSION["username"] = $username;
+
+            // Obtener el ID del usuario administrativo y establecer la variable de sesión
+            $id_usuario_admin = obtenerIdUsuarioAdmin($username);
+            $_SESSION['ID_usuario_admin'] = $id_usuario_admin;
+
+            // Redirigir al usuario a la página de inicio de administrador
+            header("Location: admin.php");
+            exit();
+        } else {
+            // Mostrar un mensaje de error si no se encontró un usuario con esas credenciales
+            echo "<center><p>Usuario o contraseña incorrecto. Intente de nuevo.</p></center>";
+        }
+    }
+}
+
+// Función para obtener el ID del usuario
+function obtenerIdUsuario($username)
+{
+    global $conn;
+    $sql = "SELECT ID_usuario FROM usuario_cliente WHERE Nombre = '$username'";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return $row['ID_usuario'];
+    } else {
+        return null;
+    }
+}
+
+// Función para obtener el ID del usuario administrativo
+function obtenerIdUsuarioAdmin($username)
+{
+    global $conn;
+    $sql = "SELECT ID_usuario_admin FROM usuario_administrativo WHERE Nombre = '$username'";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return $row['ID_usuario_admin'];
+    } else {
+        return null;
+    }
+}
+
+// Cerrar la conexión a la base de datos
+mysqli_close($conn);
+?>
+
             <div class="pie-form">
                 <a href="#">¿Perdiste tu contraseña?</a>
                 <a href="register.php">¿No tienes Cuenta? Regístrate</a>
