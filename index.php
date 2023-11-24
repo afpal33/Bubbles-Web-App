@@ -149,7 +149,7 @@ footer {
         </center>
         <br>
         <center>
-            <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist" style="--bs-nav-pills-link-active-bg: var(--bs-black);--bs-nav-pills-link-active-color: var(--bs-primary);--bs-nav-link-color: var(--bs-black);height: 45px; width: 900px">
+            <ul class="nav nav-pills nav-fill gap-2 p-1 small bg-primary rounded-5 shadow-sm" id="pillNav2" role="tablist" style="--bs-nav-pills-link-active-bg: var(--bs-black);--bs-nav-pills-link-active-color: var(--bs-primary);--bs-nav-link-color: var(--bs-white);height: 45px; width: 900px">
                 <li class="nav-item" role="presentation">
                     <a role="button" href="#home" class="nav-link rounded-5" id="inicio" data-bs-toggle="tab" type="button" role="tab" aria-selected="false">Home</a>
                 </li>
