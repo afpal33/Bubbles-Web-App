@@ -12,7 +12,17 @@
 		return $link;
 	}
 
+<<<<<<< Updated upstream
 	//--------------------------
+=======
+// Función para conectar a la base de datos
+function Conectarse()
+{
+    $servername = "localhost";
+    $username = "root";
+    $dbpassword = "marco1211";
+    $dbname = "bubbles_db";
+>>>>>>> Stashed changes
 
 	function alta ($nombre,$producto,$cantidad,$precio_unitario,$total)
 	{

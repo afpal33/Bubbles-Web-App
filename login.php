@@ -75,7 +75,12 @@
 $host = "localhost";
 $dbname = "bubbles_db";
 $username = "root";
+<<<<<<< Updated upstream
 $password = "";
+=======
+$password = "marco1211";
+$dbname = "bubbles_db";
+>>>>>>> Stashed changes
 
 // Intentamos establecer la conexión a la base de datos
 $conn = mysqli_connect($host, $username, $password, $dbname);
@@ -91,12 +96,41 @@ $username_err = $password_err = "";
 
 // Procesamos los datos del formulario cuando se envía el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+<<<<<<< Updated upstream
     // Validar el nombre de usuario
     if (empty(trim($_POST["username"]))) {
         $username_err = "Por favor, ingresa un nombre de usuario.";
     } else {
         $username = trim($_POST["username"]);
     }
+=======
+
+    // Obtener los valores del formulario
+    $username = mysqli_real_escape_string($conn, $_POST["username"]);
+    $password = mysqli_real_escape_string($conn, $_POST["password"]);
+
+    // Consultar la base de datos para verificar las credenciales del usuario
+    $sql = "SELECT * FROM usuario_cliente WHERE Nombre = '$username' AND Contrasena = '$password'";
+    $result = mysqli_query($conn, $sql);
+
+    // Verificar si se encontró un usuario con esas credenciales
+    if ($result && mysqli_num_rows($result) == 1) {
+        // Iniciar sesión
+        session_start();
+        $_SESSION["username"] = $username;
+
+        // Obtener el ID del usuario y establecer la variable de sesión
+        $id_usuario = obtenerIdUsuario($username);
+        $_SESSION['ID_usuario'] = $id_usuario;
+
+        // Redirigir al usuario a la página de inicio
+        header("Location: index.php");
+        exit();
+    } else {
+        // Verificar en la tabla de usuario administrativo
+        $sql_admin = "SELECT * FROM usuario_administrativo WHERE Nombre = '$username' AND Contrasenha = '$password'";
+        $result_admin = mysqli_query($conn, $sql_admin);
+>>>>>>> Stashed changes
 
     // Validar la contraseña
     if (empty(trim($_POST["password"]))) {
@@ -149,6 +183,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Cerramos la conexión a la base de datos
     mysqli_close($conn);
 }
+<<<<<<< Updated upstream
+=======
+
+// Función para obtener el ID del usuario
+function obtenerIdUsuario($username)
+{
+    global $conn;
+    $sql = "SELECT ID_usuario FROM usuario_cliente WHERE Nombre = '$username'";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return $row['ID_usuario'];
+    } else {
+        return null;
+    }
+}
+
+// Función para obtener el ID del usuario administrativo
+function obtenerIdUsuarioAdmin($username)
+{
+    global $conn;
+    $sql = "SELECT ID_UA FROM usuario_administrativo WHERE Nombre = '$username'";
+    $result = mysqli_query($conn, $sql);
+
+    if ($result && mysqli_num_rows($result) > 0) {
+        $row = mysqli_fetch_assoc($result);
+        return $row['ID_UA'];
+    } else {
+        return null;
+    }
+}
+
+// Cerrar la conexión a la base de datos
+mysqli_close($conn);
+>>>>>>> Stashed changes
 ?>
 
 

@@ -3,7 +3,7 @@
 $host = "localhost";
 $dbname = "bubbles_db";
 $username = "root";
-$password = "";
+$password = "marco1211";
 
 // Intentamos conectar a la base de datos
 try {

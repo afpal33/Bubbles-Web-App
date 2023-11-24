@@ -2,6 +2,24 @@
 	// Iniciar sesión
 	session_start();
 
+<<<<<<< Updated upstream
+=======
+    function conectarBaseDatos()
+    {
+        $servername = "localhost";
+        $username = "root";
+        $password = "marco1211";
+        $dbname = "bubbles_db";
+    
+        $link = mysqli_connect($servername, $username, $password, $dbname);
+    
+        if (!$link) {
+            die("Error de conexión: " . mysqli_connect_error());
+        }
+    
+        return $link;
+    }
+>>>>>>> Stashed changes
 ?>
 <!DOCTYPE html>
 <html lang="en">
