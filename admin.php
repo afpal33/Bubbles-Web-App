@@ -115,6 +115,8 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
     <div class="container">
         <h1>Gestión de Usuarios</h1>
 
+        <!-- ... (código anterior) -->
+
         <!-- Tabla de usuario_cliente -->
         <h2>Usuarios Cliente</h2>
         <div class="table-container">
@@ -123,20 +125,30 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
                         <th>Puntos</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($row = mysqli_fetch_array($result_cliente)) : ?>
+                    <?php
+                    // Modificar la consulta para obtener también correo y teléfono
+                    $result_cliente = mysqli_query($link, "SELECT ID_usuario, Nombre, Correo, Telefono, Puntos_compra_acumulados FROM usuario_cliente");
+                    while ($row = mysqli_fetch_array($result_cliente)) :
+                    ?>
                         <tr>
                             <td><?= $row['ID_usuario'] ?></td>
                             <td><?= $row['Nombre'] ?></td>
+                            <td><?= $row['Correo'] ?></td>
+                            <td><?= $row['Telefono'] ?></td>
                             <td><?= $row['Puntos_compra_acumulados'] ?></td>
                             <!-- Agrega un botón para agregar puntos directamente -->
                             <td>
                                 <form method="POST" action="admin.php">
                                     <input type="hidden" name="id_usuario_agregar_puntos" value="<?= $row['ID_usuario'] ?>">
                                     <button type="submit" name="agregar_puntos" class="btn btn-info">Agregar 100 Puntos</button>
+                                    <button type="button" class="btn btn-primary editarCliente" data-toggle="modal" data-target="#editarClienteModal" data-id="<?= $row['ID_usuario'] ?>" data-nombre="<?= $row['Nombre'] ?>" data-correo="<?= $row['Correo'] ?>" data-telefono="<?= $row['Telefono'] ?>" data-puntos="<?= $row['Puntos_compra_acumulados'] ?>">Editar</button>
+                                    <button type="button" class="btn btn-danger eliminarCliente" data-toggle="modal" data-target="#eliminarClienteModal" data-id="<?= $row['ID_usuario'] ?>">Eliminar</button>
                                 </form>
                             </td>
                         </tr>
@@ -144,6 +156,9 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
                 </tbody>
             </table>
         </div>
+
+<!-- ... (código posterior) -->
+
 
         
 
@@ -338,6 +353,76 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
             </div>
         </div>
     </div>
+    <!-- Modal para editar usuario_cliente -->
+<div class="modal fade" id="editarClienteModal" tabindex="-1" role="dialog" aria-labelledby="editarClienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="editarClienteForm" method="POST" action="admin.php">
+                <!-- Agregué un campo oculto para identificar si la acción es agregar o editar -->
+                <input type="hidden" name="accion_cliente" id="accion_cliente" value="editar">
+                <input type="hidden" id="id_cliente_editar" name="id_cliente_editar">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarClienteModalLabel">Editar Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nombre_cliente_editar">Nombre:</label>
+                        <input type="text" id="nombre_cliente_editar" name="nombre_cliente_editar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="correo_cliente_editar">Correo:</label>
+                        <input type="email" id="correo_cliente_editar" name="correo_cliente_editar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono_cliente_editar">Teléfono:</label>
+                        <input type="text" id="telefono_cliente_editar" name="telefono_cliente_editar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="puntos_cliente_editar">Puntos:</label>
+                        <input type="text" id="puntos_cliente_editar" name="puntos_cliente_editar" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="editar_cliente" class="btn btn-primary">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para eliminar usuario_cliente -->
+<div class="modal fade" id="eliminarClienteModal" tabindex="-1" role="dialog" aria-labelledby="eliminarClienteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form id="eliminarClienteForm" method="POST" action="admin.php">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="eliminarClienteModalLabel">Eliminar Cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas eliminar este cliente?</p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="id_cliente_eliminar" name="id_cliente_eliminar">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" name="eliminar_cliente" class="btn btn-danger">Eliminar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ... (código posterior) -->
 <!-- Código adicional para mostrar productos de la tabla Promo -->
 <!-- Añadir aquí el código que se encargará de las promociones -->
 
@@ -362,6 +447,29 @@ $result_admin = mysqli_query($link, "SELECT ID_UA, Nombre, CI FROM Usuario_admin
             // Puedes agregar el nombre a algún elemento del modal si lo necesitas
             // $('#nombre_admin_eliminar').text(nombre_admin);
         });
+
+</script>
+<script>
+    $('.editarCliente').on('click', function () {
+        var id_cliente = $(this).data('id');
+        var nombre_cliente = $(this).data('nombre');
+        var correo_cliente = $(this).data('correo');
+        var telefono_cliente = $(this).data('telefono');
+        var puntos_cliente = $(this).data('puntos');
+
+        $('#id_cliente_editar').val(id_cliente);
+        $('#nombre_cliente_editar').val(nombre_cliente);
+        $('#correo_cliente_editar').val(correo_cliente);
+        $('#telefono_cliente_editar').val(telefono_cliente);
+        $('#puntos_cliente_editar').val(puntos_cliente);
+    });
+
+    // Configurar el modal de eliminación con los datos del usuario_cliente seleccionado
+    $('.eliminarCliente').on('click', function () {
+        var id_cliente = $(this).data('id');
+
+        $('#id_cliente_eliminar').val(id_cliente);
+    });
 
 </script>
 
@@ -447,8 +555,43 @@ if (isset($_POST['agregar_puntos'])) {
 
 
 
+
+
+// Procesar el formulario para editar un usuario cliente
+if (isset($_POST['editar_cliente'])) {
+    $id_cliente_editar = $_POST['id_cliente_editar'];
+    $nombre_cliente_editar = $_POST['nombre_cliente_editar'];
+    $correo_cliente_editar = $_POST['correo_cliente_editar'];
+    $telefono_cliente_editar = $_POST['telefono_cliente_editar'];
+    $puntos_cliente_editar = $_POST['puntos_cliente_editar'];
+
+    $query = "UPDATE usuario_cliente SET Nombre='$nombre_cliente_editar', Correo='$correo_cliente_editar', Telefono='$telefono_cliente_editar', Puntos_compra_acumulados='$puntos_cliente_editar' WHERE ID_usuario=$id_cliente_editar";
+    $resultado = mysqli_query($link, $query);
+
+    if ($resultado) {
+        echo '<script>window.location.href="admin.php";</script>';
+    } else {
+        echo '<script>alert("Error al actualizar el usuario cliente.");</script>';
+    }
+}
+
+// Procesar el formulario para eliminar un usuario cliente
+if (isset($_POST['eliminar_cliente'])) {
+    $id_cliente_eliminar = $_POST['id_cliente_eliminar'];
+
+    $query = "DELETE FROM usuario_cliente WHERE ID_usuario=$id_cliente_eliminar";
+    $resultado = mysqli_query($link, $query);
+
+    if ($resultado) {
+        echo '<script>window.location.href="admin.php";</script>';
+    } else {
+        echo '<script>alert("Error al eliminar el usuario cliente.");</script>';
+    }
+}
+
 ?>
 
 </body>
 
 </html>
+
