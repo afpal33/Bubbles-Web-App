@@ -153,7 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = mysqli_real_escape_string($conn, $_POST["password"]);
 
     // Consultar la base de datos para verificar las credenciales del usuario
-    $sql = "SELECT * FROM usuario_cliente WHERE Nombre = '$username' AND Contraseña = '$password'";
+    $sql = "SELECT * FROM usuario_cliente WHERE Nombre = '$username' AND Contrasena = '$password'";
     $result = mysqli_query($conn, $sql);
 
     // Verificar si se encontró un usuario con esas credenciales
@@ -171,7 +171,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     } else {
         // Verificar en la tabla de usuario administrativo
-        $sql_admin = "SELECT * FROM usuario_administrativo WHERE Nombre = '$username' AND Contraseña = '$password'";
+        $sql_admin = "SELECT * FROM usuario_administrativo WHERE Nombre = '$username' AND Contrasenha = '$password'";
         $result_admin = mysqli_query($conn, $sql_admin);
 
         if ($result_admin && mysqli_num_rows($result_admin) == 1) {
@@ -212,12 +212,12 @@ function obtenerIdUsuario($username)
 function obtenerIdUsuarioAdmin($username)
 {
     global $conn;
-    $sql = "SELECT ID_usuario_admin FROM usuario_administrativo WHERE Nombre = '$username'";
+    $sql = "SELECT ID_UA FROM usuario_administrativo WHERE Nombre = '$username'";
     $result = mysqli_query($conn, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
-        return $row['ID_usuario_admin'];
+        return $row['ID_UA'];
     } else {
         return null;
     }
